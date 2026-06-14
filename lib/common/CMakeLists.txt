@@ -1,0 +1,1 @@
+project_add_interface_library(common)

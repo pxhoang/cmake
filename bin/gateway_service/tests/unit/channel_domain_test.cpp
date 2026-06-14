@@ -1,0 +1,19 @@
+#include "features/channel/domain/wireless_channel.hpp"
+
+#include <gtest/gtest.h>
+
+#include <stdexcept>
+
+TEST(WirelessChannelTest, StoresValidChannel) {
+    const WirelessChannel channel(15);
+
+    EXPECT_EQ(channel.value(), 15);
+}
+
+TEST(WirelessChannelTest, RejectsChannelBelowMinimum) {
+    EXPECT_THROW(WirelessChannel(10), std::invalid_argument);
+}
+
+TEST(WirelessChannelTest, RejectsChannelAboveMaximum) {
+    EXPECT_THROW(WirelessChannel(27), std::invalid_argument);
+}

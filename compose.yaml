@@ -1,0 +1,12 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sample-clean-cpp-dev:latest
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      HOME: /tmp
