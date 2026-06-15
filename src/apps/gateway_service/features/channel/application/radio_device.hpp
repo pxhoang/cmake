@@ -5,10 +5,10 @@
 namespace gateway::channel::application {
 
 class RadioDevice {
-public:
-    virtual ~RadioDevice() = default;
+ public:
+  virtual ~RadioDevice() = default;
 
-    virtual void applyChannel(const domain::WirelessChannel& channel) = 0;
+  virtual void applyChannel(const domain::WirelessChannel& channel) = 0;
 };
 
 }  // namespace gateway::channel::application

@@ -22,19 +22,19 @@ RECONCILE_INTERVAL_MS=50 "${executable}" serve >"${output_path}" 2>&1 &
 service_pid=$!
 
 cleanup() {
-    if kill -0 "${service_pid}" 2>/dev/null; then
-        kill -TERM "${service_pid}"
-        wait "${service_pid}"
-    fi
+  if kill -0 "${service_pid}" 2>/dev/null; then
+    kill -TERM "${service_pid}"
+    wait "${service_pid}"
+  fi
 }
 trap cleanup EXIT
 
 for _ in {1..50}; do
-    if grep -Fq "Current channel: 15" "${output_path}"; then
-        break
-    fi
+  if grep -Fq "Current channel: 15" "${output_path}"; then
+    break
+  fi
 
-    sleep 0.02
+  sleep 0.02
 done
 
 grep -F "Current channel: 15" "${output_path}"
