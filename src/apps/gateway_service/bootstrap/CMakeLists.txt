@@ -1,0 +1,12 @@
+project_add_library(gateway_composition
+    SOURCES
+        bootstrap.cpp
+    PUBLIC_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC_DEPENDENCIES
+        project::gateway_channel_api
+        project::gateway_config
+    PRIVATE_DEPENDENCIES
+        project::gateway_channel_file_adapter
+        project::gateway_channel_radio_adapter
+)

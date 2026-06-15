@@ -1,0 +1,22 @@
+[Unit]
+Description=Gateway Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/gateway_service serve
+Environment=CHANNEL_CONFIG_PATH=/var/lib/gateway_service/channel.state
+Environment=DEFAULT_CHANNEL=15
+Environment=RECONCILE_INTERVAL_MS=5000
+EnvironmentFile=-/etc/gateway_service/gateway_service.env
+StateDirectory=gateway_service
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

@@ -2,12 +2,51 @@
   "version": 6,
   "configurePresets": [
     {
+      "name": "base",
+      "hidden": true,
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
       "name": "debug",
       "displayName": "Debug",
-      "generator": "Unix Makefiles",
+      "inherits": "base",
       "binaryDir": "${sourceDir}/.img/build/debug",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON"
+      }
+    },
+    {
+      "name": "tdd",
+      "displayName": "TDD unit tests",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/.img/build/tdd",
+      "cacheVariables": {
+        "PROJECT_BUILD_INTEGRATION_TESTS": "OFF",
+        "PROJECT_BUILD_E2E_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "inherits": "base",
+      "binaryDir": "${sourceDir}/.img/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTING": "OFF"
+      }
+    },
+    {
+      "name": "sanitize",
+      "displayName": "Debug with sanitizers",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/.img/build/sanitize",
+      "cacheVariables": {
+        "PROJECT_ENABLE_SANITIZERS": "ON",
+        "PROJECT_WARNINGS_AS_ERRORS": "ON"
       }
     }
   ],
@@ -15,12 +54,82 @@
     {
       "name": "debug",
       "configurePreset": "debug"
+    },
+    {
+      "name": "tdd",
+      "configurePreset": "tdd",
+      "targets": [
+        "project_unit_tests"
+      ]
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "sanitize",
+      "configurePreset": "sanitize"
     }
   ],
   "testPresets": [
     {
       "name": "debug",
       "configurePreset": "debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "tdd",
+      "configurePreset": "tdd",
+      "filter": {
+        "include": {
+          "label": "unit"
+        }
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "unit",
+      "configurePreset": "debug",
+      "filter": {
+        "include": {
+          "label": "unit"
+        }
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "integration",
+      "configurePreset": "debug",
+      "filter": {
+        "include": {
+          "label": "integration"
+        }
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "e2e",
+      "configurePreset": "debug",
+      "filter": {
+        "include": {
+          "label": "e2e"
+        }
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "sanitize",
+      "configurePreset": "sanitize",
       "output": {
         "outputOnFailure": true
       }

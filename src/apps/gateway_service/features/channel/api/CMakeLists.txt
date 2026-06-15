@@ -1,0 +1,9 @@
+project_add_library(gateway_channel_api
+    SOURCES
+        channel_api.cpp
+    PUBLIC_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC_DEPENDENCIES
+        project::gateway_channel_application
+        project::protocol
+)

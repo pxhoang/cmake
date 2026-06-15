@@ -1,11 +1,9 @@
-project_add_test_executable(gateway_service_integration_tests)
-
-target_sources(gateway_service_integration_tests
-    PRIVATE
+project_add_integration_test(gateway_service_integration_tests
+    SOURCES
+        bootstrap_test.cpp
         file_channel_config_repository_test.cpp
-)
-
-target_link_libraries(gateway_service_integration_tests
-    PRIVATE
-        gateway_service_app
+    DEPENDENCIES
+        project::gateway_composition
+        project::gateway_channel_file_adapter
+        Threads::Threads
 )

@@ -7,19 +7,19 @@ The only host requirement is Docker.
 ## Build inside Docker
 
 ```bash
-./scripts/docker-build.sh
+./tooling/scripts/docker-build.sh
 ```
 
 ## Test inside Docker
 
 ```bash
-./scripts/docker-test.sh
+./tooling/scripts/docker-test.sh
 ```
 
 ## Run inside Docker
 
 ```bash
-./scripts/docker-run.sh gateway_service
+./tooling/scripts/docker-run.sh gateway_service
 ```
 
 Expected output:
@@ -32,22 +32,25 @@ Current channel: 15
 ## Open an interactive build shell
 
 ```bash
-./scripts/docker-shell.sh
+./tooling/scripts/docker-shell.sh
 ```
 
 Inside the shell, you can run:
 
 ```bash
-./scripts/test.sh
-./scripts/run.sh gateway_service
+./tooling/scripts/test.sh
+./tooling/scripts/run.sh gateway_service
 ```
 
-Both run commands accept any application directory under `bin/`:
+Both run commands accept any application directory under `src/apps/`:
 
 ```bash
-./scripts/run.sh <binary> [args...]
-./scripts/docker-run.sh <binary> [args...]
+./tooling/scripts/run.sh <binary> [args...]
+./tooling/scripts/docker-run.sh <binary> [args...]
 ```
+
+Docker definitions live under `tooling/docker/`. The helper scripts keep the
+repository root as the Docker build context.
 
 ## Output policy
 
@@ -58,7 +61,7 @@ Examples:
 
 ```text
 .img/build/debug/
-.img/runtime/gateway_service/channel.txt
+.img/runtime/gateway_service/channel.state
 .img/package/
 ```
 

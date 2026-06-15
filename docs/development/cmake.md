@@ -1,105 +1,217 @@
-# CMake Target Helpers
+# CMake Development Guide
 
-This project uses small helper functions to avoid repeating CMake boilerplate across many binaries and libraries.
+The build uses target-based CMake with one declarative helper call per target.
+Each component owns its sources, includes, dependencies, and tests.
 
-Files:
+## Architecture
 
-- `cmake/project_options.cmake`: reusable `project::options` and
-  `project::warnings` interface targets.
-- `cmake/project_targets.cmake`: helpers for libraries, app libraries, and executables.
-- `cmake/project_tests.cmake`: helpers for unit, integration, and shell/e2e tests.
+```mermaid
+graph TD
+    Root["Root CMakeLists.txt"] --> Source["src/"]
+    Source --> Libraries["src/libs/"]
+    Source --> Applications["src/apps/"]
+    Libraries --> Unit["Source-local unit tests"]
+    Applications --> Unit
+    Root --> Tests["Cross-component tests/"]
+    Libraries --> PublicTargets["project::library"]
+    Applications --> ComponentTargets["project::feature_layer"]
+    Tests --> Integration["integration"]
+    Tests --> E2E["e2e"]
+```
 
-## Internal library
+| File | Responsibility |
+|------|----------------|
+| `tooling/cmake/project_options.cmake` | C++ standard, warnings, sanitizers, test options |
+| `tooling/cmake/project_targets.cmake` | Library and executable target creation |
+| `tooling/cmake/project_tests.cmake` | Unit, integration, and e2e registration |
+| `tooling/cmake/dependencies/` | Third-party dependency declarations |
+| `CMakePresets.json` | Reproducible developer and CI workflows |
+
+## Ownership Rules
+
+- Put one `CMakeLists.txt` beside each independently buildable component.
+- Keep directory-index files limited to `add_subdirectory()`.
+- Declare every source explicitly; do not use `file(GLOB)`.
+- Link only direct dependencies.
+- Use `PUBLIC` dependencies only when exposed by public headers.
+- Keep executable `main.cpp` thin and move behavior into testable libraries.
+- Link concrete adapters only from a composition target.
+- Add a unit test with every behavior change.
+
+## Add A Library
+
+Create `src/libs/example/CMakeLists.txt`:
 
 ```cmake
-project_add_library(protocol)
-
-target_sources(protocol
-    PRIVATE
-        src/text_format.cpp
+project_add_library(example
+    SOURCES
+        src/example.cpp
+    PUBLIC_DEPENDENCIES
+        project::common
 )
 
-target_link_libraries(protocol
-    PUBLIC
+if(BUILD_TESTING)
+    project_add_unit_test(example_unit_tests
+        SOURCES
+            tests/example_test.cpp
+        DEPENDENCIES
+            project::example
+    )
+endif()
+```
+
+Add one line to `src/libs/CMakeLists.txt`:
+
+```cmake
+add_subdirectory(example)
+```
+
+The default public include directory is `src/libs/example/include`. Consumers
+link the stable alias:
+
+```cmake
+project::example
+```
+
+Use an interface library for header-only code:
+
+```cmake
+project_add_interface_library(example_contract
+    DEPENDENCIES
         project::common
 )
 ```
 
-## Header-only internal library
+## Add A Binary
+
+Keep runtime behavior in libraries and use the executable only as the entry
+point:
 
 ```cmake
-project_add_interface_library(common)
-```
+add_subdirectory(features/example)
+add_subdirectory(bootstrap)
 
-## Binary application
-
-Each binary should be split into an app library and a real executable:
-
-```cmake
-project_add_app_library(gateway_service_app)
-
-target_sources(gateway_service_app
-    PRIVATE
-        bootstrap/bootstrap.cpp
-)
-
-project_add_executable(gateway_service)
-
-target_sources(gateway_service
-    PRIVATE
+project_add_executable(example_service
+    INSTALL
+    SOURCES
         main.cpp
+    DEPENDENCIES
+        project::example_composition
+        Threads::Threads
 )
 
-target_link_libraries(gateway_service
-    PRIVATE
-        gateway_service_app
-)
+if(BUILD_TESTING)
+    add_subdirectory(tests/unit)
+endif()
 ```
 
-## Unit test
-
-Tests use GoogleTest. The helper links `GTest::gtest_main` and registers each
-GoogleTest case with CTest:
+Add one line to `src/apps/CMakeLists.txt`:
 
 ```cmake
-project_add_test_executable(gateway_service_channel_domain_test)
+add_subdirectory(example_service)
+```
 
-target_sources(gateway_service_channel_domain_test
-    PRIVATE
-        tests/unit/channel_domain_test.cpp
-)
+`INSTALL` installs the executable to `${CMAKE_INSTALL_BINDIR}`.
 
-target_link_libraries(gateway_service_channel_domain_test
-    PRIVATE
-        gateway_service_app
+## Add Tests
+
+Use one test executable for a cohesive test subject. Prefer focused test
+executables during TDD because CMake rebuilds and runs less code.
+
+Unit test:
+
+```cmake
+project_add_unit_test(example_policy_test
+    SOURCES
+        example_policy_test.cpp
+    DEPENDENCIES
+        project::example_policy
 )
 ```
 
-Test sources use the GoogleTest API and do not define `main()`:
+Integration test:
 
-```cpp
-#include <gtest/gtest.h>
-
-TEST(WirelessChannelTest, StoresValidChannel) {
-    const WirelessChannel channel(15);
-
-    EXPECT_EQ(channel.value(), 15);
-}
+```cmake
+project_add_integration_test(example_storage_test
+    SOURCES
+        example_storage_test.cpp
+    DEPENDENCIES
+        project::example_storage
+    TIMEOUT
+        30
+)
 ```
 
-## Rule
+End-to-end test:
 
-Use helpers for repeated mechanics:
+```cmake
+project_add_e2e_test(example_service_e2e
+    COMMAND
+        ${CMAKE_CURRENT_SOURCE_DIR}/run_test.sh
+    ARGUMENTS
+        $<TARGET_FILE:example_service>
+    TIMEOUT
+        60
+)
+```
 
-- C++ standard
-- warnings
-- target aliases
-- include directories
-- test registration
+CTest labels are assigned automatically: `unit`, `integration`, and `e2e`.
 
-Keep explicit per target:
+## TDD Workflow
 
-- source files
-- dependencies
-- target name
-- target type
+```bash
+./tooling/scripts/test.sh tdd
+```
+
+The `tdd` preset excludes integration and e2e targets at configure time and
+builds only the aggregate `project_unit_tests` target. New unit tests join this
+target automatically.
+
+Run a single GoogleTest case:
+
+```bash
+./tooling/scripts/build.sh tdd
+ctest --test-dir .img/build/tdd -R 'TestSuite.TestName' --output-on-failure
+```
+
+Run a test layer:
+
+```bash
+./tooling/scripts/test.sh unit
+./tooling/scripts/test.sh integration
+./tooling/scripts/test.sh e2e
+```
+
+Run the complete suite with sanitizers and warnings as errors:
+
+```bash
+./tooling/scripts/test.sh sanitize
+```
+
+## Presets
+
+| Preset | Tests built | Purpose |
+|--------|-------------|---------|
+| `tdd` | Unit only | Fast edit-build-test loop |
+| `debug` | All | Full local verification |
+| `sanitize` | All | ASan, UBSan, warnings as errors |
+| `release` | None | Production build and packaging |
+
+All generated output stays under `.img/`. Compile commands are exported for
+editor and static-analysis integration.
+
+## Dependency Direction
+
+```mermaid
+graph TD
+    Executable --> Composition
+    Composition --> API
+    Composition --> Config
+    Composition --> Adapters
+    API --> Application
+    Adapters --> Application
+    Application --> Domain
+```
+
+Domain and application targets must not depend on infrastructure or concrete
+adapters. These rules remain visible and enforceable through target links.

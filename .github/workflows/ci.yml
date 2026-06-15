@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and test
+        run: ./tooling/scripts/docker-test.sh
+
+      - name: Sanitizer build and test
+        run: |
+          ./tooling/scripts/docker-dev.sh bash -lc \
+            'cmake --preset sanitize && cmake --build --preset sanitize && ctest --preset sanitize'
+
+      - name: Release package
+        run: |
+          ./tooling/scripts/docker-dev.sh bash -lc \
+            'cmake --preset release && cmake --build --preset release && cpack --config .img/build/release/CPackConfig.cmake -B .img/package'

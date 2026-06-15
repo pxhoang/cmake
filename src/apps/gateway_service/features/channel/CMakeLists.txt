@@ -1,0 +1,4 @@
+add_subdirectory(domain)
+add_subdirectory(application)
+add_subdirectory(api)
+add_subdirectory(adapters)
