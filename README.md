@@ -28,6 +28,8 @@ docs/      Architecture, development, and operations documentation
 
 ## Build locally
 
+Requires CMake, Ninja, and a C++ compiler.
+
 ```bash
 ./tooling/scripts/build.sh
 ```

@@ -4,7 +4,7 @@
     {
       "name": "base",
       "hidden": true,
-      "generator": "Unix Makefiles",
+      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
@@ -36,7 +36,9 @@
       "binaryDir": "${sourceDir}/.img/build/release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "BUILD_TESTING": "OFF"
+        "BUILD_TESTING": "OFF",
+        "PROJECT_ENABLE_HARDENING": "ON",
+        "PROJECT_RELEASE_SPLIT_DEBUG_SYMBOLS": "ON"
       }
     },
     {

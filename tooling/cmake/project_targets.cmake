@@ -15,6 +15,42 @@ function(_project_validate_target_arguments target_name)
     endif()
 endfunction()
 
+function(_project_enable_release_split_debug_symbols target_name)
+    if(NOT PROJECT_RELEASE_SPLIT_DEBUG_SYMBOLS)
+        return()
+    endif()
+
+    if(NOT CMAKE_OBJCOPY OR NOT CMAKE_STRIP)
+        message(
+            WARNING
+            "PROJECT_RELEASE_SPLIT_DEBUG_SYMBOLS is enabled, but objcopy or strip was not found"
+        )
+        return()
+    endif()
+
+    if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+        return()
+    endif()
+
+    set(debug_file "$<TARGET_FILE:${target_name}>.debug")
+
+    add_custom_command(
+        TARGET ${target_name}
+        POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} --only-keep-debug "$<TARGET_FILE:${target_name}>" "${debug_file}"
+        COMMAND ${CMAKE_STRIP} --strip-unneeded "$<TARGET_FILE:${target_name}>"
+        COMMAND ${CMAKE_OBJCOPY} "--add-gnu-debuglink=${debug_file}" "$<TARGET_FILE:${target_name}>"
+        VERBATIM
+        COMMENT "Splitting debug symbols for ${target_name}"
+    )
+
+    set_property(
+        TARGET ${target_name}
+        APPEND
+        PROPERTY ADDITIONAL_CLEAN_FILES "${debug_file}"
+    )
+endfunction()
+
 function(project_add_interface_library target_name)
     cmake_parse_arguments(
         ARG
@@ -123,9 +159,18 @@ function(project_add_executable target_name)
     )
 
     if(ARG_INSTALL)
+        _project_enable_release_split_debug_symbols(${target_name})
+
         install(
             TARGETS ${target_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         )
+
+        if(PROJECT_RELEASE_SPLIT_DEBUG_SYMBOLS AND CMAKE_BUILD_TYPE STREQUAL "Release")
+            install(
+                FILES "$<TARGET_FILE:${target_name}>.debug"
+                DESTINATION ${CMAKE_INSTALL_LIBDIR}/debug/${CMAKE_INSTALL_BINDIR}
+            )
+        endif()
     endif()
 endfunction()

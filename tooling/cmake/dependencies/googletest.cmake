@@ -1,7 +1,7 @@
 include(FetchContent)
 
 set(FETCHCONTENT_BASE_DIR
-    ${CMAKE_SOURCE_DIR}/.img/external
+    ${CMAKE_BINARY_DIR}/_deps
 )
 
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)

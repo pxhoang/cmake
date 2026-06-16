@@ -190,6 +190,9 @@ Run the complete suite with sanitizers and warnings as errors:
 
 ## Presets
 
+Presets use the Ninja generator. Local builds require CMake, Ninja, and a C++
+compiler; Docker builds provide those tools in the development image.
+
 | Preset | Tests built | Purpose |
 |--------|-------------|---------|
 | `tdd` | Unit only | Fast edit-build-test loop |
@@ -197,8 +200,24 @@ Run the complete suite with sanitizers and warnings as errors:
 | `sanitize` | All | ASan, UBSan, warnings as errors |
 | `release` | None | Production build and packaging |
 
-All generated output stays under `.img/`. Compile commands are exported for
-editor and static-analysis integration.
+All generated output stays under `.img/`. Build-local FetchContent downloads
+are stored under each preset build directory's `_deps/` directory. Compile
+commands are exported for editor and static-analysis integration.
+
+## Release Builds
+
+The `release` preset is intended for production packaging:
+
+- Uses CMake `Release`, which enables compiler optimization and defines
+  `NDEBUG`.
+- Keeps project warnings enabled.
+- Leaves sanitizers disabled unless explicitly enabled by another preset.
+- Keeps C++ runtime error handling and exceptions enabled.
+- Enables conservative Linux hardening flags for GNU/Clang builds.
+- Compiles release objects with debug information, then strips installable
+  executables after writing separate `.debug` files.
+- Installs debug symbols under `${CMAKE_INSTALL_LIBDIR}/debug/${CMAKE_INSTALL_BINDIR}`
+  so stripped binaries can still be diagnosed later.
 
 ## Dependency Direction
 
