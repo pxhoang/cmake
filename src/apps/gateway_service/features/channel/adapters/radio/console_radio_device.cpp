@@ -4,8 +4,8 @@
 
 namespace gateway::channel::adapter {
 
-void ConsoleRadioDevice::applyChannel(const domain::WirelessChannel& channel) {
-  std::cout << "radio_apply_channel: " << channel.value() << std::endl;
+void ConsoleRadioDevice::ApplyChannel(const domain::WirelessChannel& channel) {
+  std::cout << "radio_apply_channel: " << channel.Value() << std::endl;
 }
 
 }  // namespace gateway::channel::adapter

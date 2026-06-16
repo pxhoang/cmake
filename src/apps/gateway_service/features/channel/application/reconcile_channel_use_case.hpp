@@ -14,16 +14,16 @@ class ReconcileChannelUseCase {
                           std::shared_ptr<RadioDevice> radio)
       : repository_(std::move(repository)), radio_(std::move(radio)) {}
 
-  bool execute() {
-    auto state = repository_->load();
+  bool Execute() {
+    auto state = repository_->Load();
 
     if (!state.desired.has_value() || state.desired == state.applied) {
       return false;
     }
 
-    radio_->applyChannel(state.desired.value());
+    radio_->ApplyChannel(state.desired.value());
     state.applied = state.desired;
-    repository_->save(state);
+    repository_->Save(state);
     return true;
   }
 

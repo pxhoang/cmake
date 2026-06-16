@@ -2,7 +2,7 @@
 
 namespace protocol {
 
-std::string formatChannelMessage(int channel) {
+std::string FormatChannelMessage(int channel) {
   return "Current channel: " + std::to_string(channel);
 }
 

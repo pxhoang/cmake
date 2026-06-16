@@ -14,17 +14,17 @@ class SetChannelUseCase {
                     std::shared_ptr<RadioDevice> radio)
       : repository_(std::move(repository)), radio_(std::move(radio)) {}
 
-  void execute(int rawChannel) {
-    const domain::WirelessChannel channel(rawChannel);
-    auto state = repository_->load();
+  void Execute(int raw_channel) {
+    const domain::WirelessChannel channel(raw_channel);
+    auto state = repository_->Load();
 
     state.desired = channel;
-    repository_->save(state);
+    repository_->Save(state);
 
-    radio_->applyChannel(channel);
+    radio_->ApplyChannel(channel);
 
     state.applied = channel;
-    repository_->save(state);
+    repository_->Save(state);
   }
 
  private:

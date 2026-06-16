@@ -7,26 +7,28 @@
 namespace gateway::channel::api {
 
 ChannelApi::ChannelApi(
-    std::shared_ptr<application::SetChannelUseCase> setChannelUseCase,
-    std::shared_ptr<application::GetChannelUseCase> getChannelUseCase,
+    std::shared_ptr<application::SetChannelUseCase> set_channel_use_case,
+    std::shared_ptr<application::GetChannelUseCase> get_channel_use_case,
     std::shared_ptr<application::ReconcileChannelUseCase>
-        reconcileChannelUseCase)
-    : setChannelUseCase_(std::move(setChannelUseCase)),
-      getChannelUseCase_(std::move(getChannelUseCase)),
-      reconcileChannelUseCase_(std::move(reconcileChannelUseCase)) {}
+        reconcile_channel_use_case)
+    : set_channel_use_case_(std::move(set_channel_use_case)),
+      get_channel_use_case_(std::move(get_channel_use_case)),
+      reconcile_channel_use_case_(std::move(reconcile_channel_use_case)) {}
 
-void ChannelApi::setChannel(int channel) {
-  setChannelUseCase_->execute(channel);
+void ChannelApi::SetChannel(int channel) {
+  set_channel_use_case_->Execute(channel);
 }
 
-int ChannelApi::getChannel() { return getChannelUseCase_->execute().value(); }
-
-std::string ChannelApi::getChannelMessage() {
-  return protocol::formatChannelMessage(getChannel());
+int ChannelApi::GetChannel() {
+  return get_channel_use_case_->Execute().Value();
 }
 
-bool ChannelApi::reconcileChannel() {
-  return reconcileChannelUseCase_->execute();
+std::string ChannelApi::GetChannelMessage() {
+  return protocol::FormatChannelMessage(GetChannel());
+}
+
+bool ChannelApi::ReconcileChannel() {
+  return reconcile_channel_use_case_->Execute();
 }
 
 }  // namespace gateway::channel::api

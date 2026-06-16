@@ -6,19 +6,19 @@ namespace gateway::infrastructure {
 
 class AppConfig {
  public:
-  static AppConfig load();
+  static AppConfig Load();
 
-  const std::string& channelConfigPath() const;
-  int defaultChannel() const;
-  int reconcileIntervalMilliseconds() const;
+  const std::string& ChannelConfigPath() const;
+  int DefaultChannel() const;
+  int ReconcileIntervalMilliseconds() const;
 
  private:
-  AppConfig(std::string channelConfigPath, int defaultChannel,
-            int reconcileIntervalMilliseconds);
+  AppConfig(std::string channel_config_path, int default_channel,
+            int reconcile_interval_milliseconds);
 
-  std::string channelConfigPath_;
-  int defaultChannel_;
-  int reconcileIntervalMilliseconds_;
+  std::string channel_config_path_;
+  int default_channel_;
+  int reconcile_interval_milliseconds_;
 };
 
 }  // namespace gateway::infrastructure

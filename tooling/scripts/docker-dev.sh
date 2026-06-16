@@ -17,8 +17,8 @@ docker build \
 docker run \
   --rm \
   --user "$(id -u):$(id -g)" \
-  -v "${PROJECT_ROOT}:/workspace" \
-  -w /workspace \
+  -v "${PROJECT_ROOT}:${PROJECT_ROOT}" \
+  -w "${PROJECT_ROOT}" \
   -e HOME=/tmp \
   "${IMAGE_NAME}" \
   "$@"

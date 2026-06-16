@@ -10,30 +10,30 @@
 
 namespace gateway::bootstrap {
 
-channel::api::ChannelApi Bootstrap::createChannelApi(
+channel::api::ChannelApi Bootstrap::CreateChannelApi(
     const infrastructure::AppConfig& config) {
   auto repository =
       std::make_shared<channel::adapter::FileChannelConfigRepository>(
-          config.channelConfigPath());
+          config.ChannelConfigPath());
   auto radio = std::make_shared<channel::adapter::ConsoleRadioDevice>();
 
-  auto setChannelUseCase =
+  auto set_channel_use_case =
       std::make_shared<channel::application::SetChannelUseCase>(repository,
                                                                 radio);
-  auto getChannelUseCase =
+  auto get_channel_use_case =
       std::make_shared<channel::application::GetChannelUseCase>(repository);
-  auto reconcileChannelUseCase =
+  auto reconcile_channel_use_case =
       std::make_shared<channel::application::ReconcileChannelUseCase>(
           repository, radio);
 
-  if (!repository->load().desired.has_value()) {
-    setChannelUseCase->execute(config.defaultChannel());
+  if (!repository->Load().desired.has_value()) {
+    set_channel_use_case->Execute(config.DefaultChannel());
   } else {
-    reconcileChannelUseCase->execute();
+    reconcile_channel_use_case->Execute();
   }
 
-  return channel::api::ChannelApi(setChannelUseCase, getChannelUseCase,
-                                  reconcileChannelUseCase);
+  return channel::api::ChannelApi(set_channel_use_case, get_channel_use_case,
+                                  reconcile_channel_use_case);
 }
 
 }  // namespace gateway::bootstrap

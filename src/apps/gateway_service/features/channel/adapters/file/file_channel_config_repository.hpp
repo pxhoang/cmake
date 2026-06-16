@@ -12,11 +12,11 @@ class FileChannelConfigRepository final
  public:
   explicit FileChannelConfigRepository(std::string path);
 
-  domain::ChannelState load() override;
-  void save(const domain::ChannelState& state) override;
+  domain::ChannelState Load() override;
+  void Save(const domain::ChannelState& state) override;
 
  private:
-  domain::ChannelState loadUnlocked();
+  domain::ChannelState LoadUnlocked();
 
   std::string path_;
   std::mutex mutex_;

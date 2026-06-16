@@ -11,21 +11,22 @@ namespace gateway::channel::api {
 
 class ChannelApi {
  public:
-  ChannelApi(std::shared_ptr<application::SetChannelUseCase> setChannelUseCase,
-             std::shared_ptr<application::GetChannelUseCase> getChannelUseCase,
-             std::shared_ptr<application::ReconcileChannelUseCase>
-                 reconcileChannelUseCase);
+  ChannelApi(
+      std::shared_ptr<application::SetChannelUseCase> set_channel_use_case,
+      std::shared_ptr<application::GetChannelUseCase> get_channel_use_case,
+      std::shared_ptr<application::ReconcileChannelUseCase>
+          reconcile_channel_use_case);
 
-  void setChannel(int channel);
-  int getChannel();
-  std::string getChannelMessage();
-  bool reconcileChannel();
+  void SetChannel(int channel);
+  int GetChannel();
+  std::string GetChannelMessage();
+  bool ReconcileChannel();
 
  private:
-  std::shared_ptr<application::SetChannelUseCase> setChannelUseCase_;
-  std::shared_ptr<application::GetChannelUseCase> getChannelUseCase_;
+  std::shared_ptr<application::SetChannelUseCase> set_channel_use_case_;
+  std::shared_ptr<application::GetChannelUseCase> get_channel_use_case_;
   std::shared_ptr<application::ReconcileChannelUseCase>
-      reconcileChannelUseCase_;
+      reconcile_channel_use_case_;
 };
 
 }  // namespace gateway::channel::api

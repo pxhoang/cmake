@@ -7,7 +7,7 @@ namespace gateway::bootstrap {
 
 class Bootstrap {
  public:
-  channel::api::ChannelApi createChannelApi(
+  channel::api::ChannelApi CreateChannelApi(
       const infrastructure::AppConfig& config);
 };
 

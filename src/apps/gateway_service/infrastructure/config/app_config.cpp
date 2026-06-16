@@ -11,11 +11,11 @@
 namespace gateway::infrastructure {
 namespace {
 
-std::string readString(const char* name, std::string defaultValue) {
+std::string ReadString(const char* name, std::string default_value) {
   const char* value = std::getenv(name);
 
   if (value == nullptr) {
-    return defaultValue;
+    return default_value;
   }
 
   if (*value == '\0') {
@@ -25,66 +25,66 @@ std::string readString(const char* name, std::string defaultValue) {
   return value;
 }
 
-int readInteger(const char* name, int defaultValue) {
+int ReadInteger(const char* name, int default_value) {
   const char* value = std::getenv(name);
 
   if (value == nullptr) {
-    return defaultValue;
+    return default_value;
   }
 
-  std::size_t parsedCharacters = 0;
-  long parsedValue = 0;
+  std::size_t parsed_characters = 0;
+  long parsed_value = 0;
 
   try {
-    parsedValue = std::stol(value, &parsedCharacters);
+    parsed_value = std::stol(value, &parsed_characters);
   } catch (const std::exception&) {
     throw std::runtime_error(std::string(name) + "_must_be_an_integer");
   }
 
-  if (parsedCharacters != std::string_view(value).size() ||
-      parsedValue < std::numeric_limits<int>::min() ||
-      parsedValue > std::numeric_limits<int>::max()) {
+  if (parsed_characters != std::string_view(value).size() ||
+      parsed_value < std::numeric_limits<int>::min() ||
+      parsed_value > std::numeric_limits<int>::max()) {
     throw std::runtime_error(std::string(name) + "_must_be_an_integer");
   }
 
-  return static_cast<int>(parsedValue);
+  return static_cast<int>(parsed_value);
 }
 
 }  // namespace
 
-AppConfig::AppConfig(std::string channelConfigPath, int defaultChannel,
-                     int reconcileIntervalMilliseconds)
-    : channelConfigPath_(std::move(channelConfigPath)),
-      defaultChannel_(defaultChannel),
-      reconcileIntervalMilliseconds_(reconcileIntervalMilliseconds) {}
+AppConfig::AppConfig(std::string channel_config_path, int default_channel,
+                     int reconcile_interval_milliseconds)
+    : channel_config_path_(std::move(channel_config_path)),
+      default_channel_(default_channel),
+      reconcile_interval_milliseconds_(reconcile_interval_milliseconds) {}
 
-AppConfig AppConfig::load() {
-  auto channelConfigPath = readString(
+AppConfig AppConfig::Load() {
+  auto channel_config_path = ReadString(
       "CHANNEL_CONFIG_PATH", ".img/runtime/gateway_service/channel.state");
-  const int defaultChannel = readInteger("DEFAULT_CHANNEL", 15);
-  const int reconcileIntervalMilliseconds =
-      readInteger("RECONCILE_INTERVAL_MS", 5000);
+  const int default_channel = ReadInteger("DEFAULT_CHANNEL", 15);
+  const int reconcile_interval_milliseconds =
+      ReadInteger("RECONCILE_INTERVAL_MS", 5000);
 
-  const channel::domain::WirelessChannel validatedDefaultChannel{
-      defaultChannel};
-  static_cast<void>(validatedDefaultChannel);
+  const channel::domain::WirelessChannel validated_default_channel{
+      default_channel};
+  static_cast<void>(validated_default_channel);
 
-  if (reconcileIntervalMilliseconds <= 0) {
+  if (reconcile_interval_milliseconds <= 0) {
     throw std::runtime_error("RECONCILE_INTERVAL_MS_must_be_positive");
   }
 
-  return AppConfig(std::move(channelConfigPath), defaultChannel,
-                   reconcileIntervalMilliseconds);
+  return AppConfig(std::move(channel_config_path), default_channel,
+                   reconcile_interval_milliseconds);
 }
 
-const std::string& AppConfig::channelConfigPath() const {
-  return channelConfigPath_;
+const std::string& AppConfig::ChannelConfigPath() const {
+  return channel_config_path_;
 }
 
-int AppConfig::defaultChannel() const { return defaultChannel_; }
+int AppConfig::DefaultChannel() const { return default_channel_; }
 
-int AppConfig::reconcileIntervalMilliseconds() const {
-  return reconcileIntervalMilliseconds_;
+int AppConfig::ReconcileIntervalMilliseconds() const {
+  return reconcile_interval_milliseconds_;
 }
 
 }  // namespace gateway::infrastructure

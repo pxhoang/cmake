@@ -12,7 +12,7 @@ class WirelessChannel {
     }
   }
 
-  int value() const { return value_; }
+  int Value() const { return value_; }
 
  private:
   int value_;
@@ -20,7 +20,7 @@ class WirelessChannel {
 
 inline bool operator==(const WirelessChannel& left,
                        const WirelessChannel& right) {
-  return left.value() == right.value();
+  return left.Value() == right.Value();
 }
 
 }  // namespace gateway::channel::domain

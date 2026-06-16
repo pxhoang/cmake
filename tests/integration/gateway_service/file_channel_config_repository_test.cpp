@@ -33,7 +33,7 @@ class FileChannelConfigRepositoryTest : public ::testing::Test {
 TEST_F(FileChannelConfigRepositoryTest, ReturnsEmptyStateWhenFileDoesNotExist) {
   FileChannelConfigRepository repository(path.string());
 
-  const auto state = repository.load();
+  const auto state = repository.Load();
 
   EXPECT_FALSE(state.desired.has_value());
   EXPECT_FALSE(state.applied.has_value());
@@ -43,13 +43,13 @@ TEST_F(FileChannelConfigRepositoryTest, SavesAndLoadsState) {
   FileChannelConfigRepository repository(path.string());
   const ChannelState expected{WirelessChannel(15), WirelessChannel(20)};
 
-  repository.save(expected);
-  const auto loaded = repository.load();
+  repository.Save(expected);
+  const auto loaded = repository.Load();
 
   ASSERT_TRUE(loaded.desired.has_value());
-  EXPECT_EQ(loaded.desired->value(), 15);
+  EXPECT_EQ(loaded.desired->Value(), 15);
   ASSERT_TRUE(loaded.applied.has_value());
-  EXPECT_EQ(loaded.applied->value(), 20);
+  EXPECT_EQ(loaded.applied->Value(), 20);
 }
 
 TEST_F(FileChannelConfigRepositoryTest, RejectsCorruptState) {
@@ -57,27 +57,27 @@ TEST_F(FileChannelConfigRepositoryTest, RejectsCorruptState) {
   std::ofstream(path) << "invalid\n";
   FileChannelConfigRepository repository(path.string());
 
-  EXPECT_THROW(repository.load(), std::runtime_error);
+  EXPECT_THROW(repository.Load(), std::runtime_error);
 }
 
 TEST_F(FileChannelConfigRepositoryTest, SerializesConcurrentWrites) {
   FileChannelConfigRepository repository(path.string());
 
   std::thread first([&repository] {
-    repository.save(ChannelState{WirelessChannel(15), WirelessChannel(15)});
+    repository.Save(ChannelState{WirelessChannel(15), WirelessChannel(15)});
   });
   std::thread second([&repository] {
-    repository.save(ChannelState{WirelessChannel(20), WirelessChannel(20)});
+    repository.Save(ChannelState{WirelessChannel(20), WirelessChannel(20)});
   });
 
   first.join();
   second.join();
 
-  const auto state = repository.load();
+  const auto state = repository.Load();
   ASSERT_TRUE(state.desired.has_value());
   ASSERT_TRUE(state.applied.has_value());
   EXPECT_EQ(state.desired, state.applied);
-  EXPECT_TRUE(state.desired->value() == 15 || state.desired->value() == 20);
+  EXPECT_TRUE(state.desired->Value() == 15 || state.desired->Value() == 20);
 }
 
 }  // namespace

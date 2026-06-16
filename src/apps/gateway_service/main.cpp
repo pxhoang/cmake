@@ -11,34 +11,34 @@
 
 namespace {
 
-volatile std::sig_atomic_t stopRequested = 0;
+volatile std::sig_atomic_t stop_requested = 0;
 
-void requestStop(int) { stopRequested = 1; }
+void RequestStop(int) { stop_requested = 1; }
 
-void printCurrentChannel(gateway::channel::api::ChannelApi& api) {
-  std::cout << api.getChannelMessage() << std::endl;
+void PrintCurrentChannel(gateway::channel::api::ChannelApi& api) {
+  std::cout << api.GetChannelMessage() << std::endl;
 }
 
-int runOnce(gateway::channel::api::ChannelApi& api) {
-  printCurrentChannel(api);
+int RunOnce(gateway::channel::api::ChannelApi& api) {
+  PrintCurrentChannel(api);
   return 0;
 }
 
-int serve(gateway::channel::api::ChannelApi& api,
+int Serve(gateway::channel::api::ChannelApi& api,
           const gateway::infrastructure::AppConfig& config) {
-  std::signal(SIGINT, requestStop);
-  std::signal(SIGTERM, requestStop);
+  std::signal(SIGINT, RequestStop);
+  std::signal(SIGTERM, RequestStop);
 
-  printCurrentChannel(api);
+  PrintCurrentChannel(api);
 
   const auto interval =
-      std::chrono::milliseconds(config.reconcileIntervalMilliseconds());
+      std::chrono::milliseconds(config.ReconcileIntervalMilliseconds());
 
-  while (stopRequested == 0) {
+  while (stop_requested == 0) {
     std::this_thread::sleep_for(interval);
 
-    if (stopRequested == 0) {
-      api.reconcileChannel();
+    if (stop_requested == 0) {
+      api.ReconcileChannel();
     }
   }
 
@@ -55,15 +55,15 @@ int main(int argc, char* argv[]) {
       throw std::runtime_error("usage: gateway_service [once|serve]");
     }
 
-    const auto config = gateway::infrastructure::AppConfig::load();
+    const auto config = gateway::infrastructure::AppConfig::Load();
     gateway::bootstrap::Bootstrap bootstrap;
-    auto api = bootstrap.createChannelApi(config);
+    auto api = bootstrap.CreateChannelApi(config);
 
     if (command == "serve") {
-      return serve(api, config);
+      return Serve(api, config);
     }
 
-    return runOnce(api);
+    return RunOnce(api);
   } catch (const std::exception& ex) {
     std::cerr << "fatal_error: " << ex.what() << "\n";
     return 1;

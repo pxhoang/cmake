@@ -18,37 +18,37 @@ using gateway::channel::domain::WirelessChannel;
 
 class FakeRepository final : public ChannelConfigRepository {
  public:
-  ChannelState load() override { return state; }
+  ChannelState Load() override { return state; }
 
-  void save(const ChannelState& value) override { state = value; }
+  void Save(const ChannelState& value) override { state = value; }
 
   ChannelState state;
 };
 
 class FakeRadio final : public RadioDevice {
  public:
-  void applyChannel(const WirelessChannel& channel) override {
-    appliedChannel = channel;
+  void ApplyChannel(const WirelessChannel& channel) override {
+    applied_channel = channel;
   }
 
-  std::optional<WirelessChannel> appliedChannel;
+  std::optional<WirelessChannel> applied_channel;
 };
 
 TEST(ChannelApiTest, SetsGetsAndFormatsChannel) {
   auto repository = std::make_shared<FakeRepository>();
   auto radio = std::make_shared<FakeRadio>();
-  auto setUseCase = std::make_shared<SetChannelUseCase>(repository, radio);
-  auto getUseCase = std::make_shared<GetChannelUseCase>(repository);
-  auto reconcileUseCase =
+  auto set_use_case = std::make_shared<SetChannelUseCase>(repository, radio);
+  auto get_use_case = std::make_shared<GetChannelUseCase>(repository);
+  auto reconcile_use_case =
       std::make_shared<ReconcileChannelUseCase>(repository, radio);
-  ChannelApi api(setUseCase, getUseCase, reconcileUseCase);
+  ChannelApi api(set_use_case, get_use_case, reconcile_use_case);
 
-  api.setChannel(20);
+  api.SetChannel(20);
 
-  EXPECT_EQ(api.getChannel(), 20);
-  EXPECT_EQ(api.getChannelMessage(), "Current channel: 20");
-  ASSERT_TRUE(radio->appliedChannel.has_value());
-  EXPECT_EQ(radio->appliedChannel->value(), 20);
+  EXPECT_EQ(api.GetChannel(), 20);
+  EXPECT_EQ(api.GetChannelMessage(), "Current channel: 20");
+  ASSERT_TRUE(radio->applied_channel.has_value());
+  EXPECT_EQ(radio->applied_channel->Value(), 20);
 }
 
 }  // namespace

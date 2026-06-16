@@ -1,0 +1,8 @@
+{
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
+  "cmake.configureOnOpen": false,
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}",
+    "--clang-tidy"
+  ]
+}

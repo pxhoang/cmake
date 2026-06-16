@@ -14,8 +14,8 @@ class GetChannelUseCase {
       std::shared_ptr<ChannelConfigRepository> repository)
       : repository_(std::move(repository)) {}
 
-  domain::WirelessChannel execute() {
-    const auto state = repository_->load();
+  domain::WirelessChannel Execute() {
+    const auto state = repository_->Load();
 
     if (!state.desired.has_value()) {
       throw std::runtime_error("desired_channel_not_configured");

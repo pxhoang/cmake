@@ -9,7 +9,7 @@ using gateway::channel::domain::WirelessChannel;
 TEST(WirelessChannelTest, StoresValidChannel) {
   const WirelessChannel channel(15);
 
-  EXPECT_EQ(channel.value(), 15);
+  EXPECT_EQ(channel.Value(), 15);
 }
 
 TEST(WirelessChannelTest, RejectsChannelBelowMinimum) {

@@ -34,12 +34,12 @@ class BootstrapTest : public ::testing::Test {
 };
 
 TEST_F(BootstrapTest, WiresAdaptersAndInitializesDefaultChannel) {
-  const auto config = gateway::infrastructure::AppConfig::load();
+  const auto config = gateway::infrastructure::AppConfig::Load();
   gateway::bootstrap::Bootstrap bootstrap;
 
-  auto api = bootstrap.createChannelApi(config);
+  auto api = bootstrap.CreateChannelApi(config);
 
-  EXPECT_EQ(api.getChannel(), 20);
+  EXPECT_EQ(api.GetChannel(), 20);
   EXPECT_TRUE(std::filesystem::exists(path));
 }
 

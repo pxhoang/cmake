@@ -8,7 +8,7 @@ class RadioDevice {
  public:
   virtual ~RadioDevice() = default;
 
-  virtual void applyChannel(const domain::WirelessChannel& channel) = 0;
+  virtual void ApplyChannel(const domain::WirelessChannel& channel) = 0;
 };
 
 }  // namespace gateway::channel::application
