@@ -1,9 +1,9 @@
 project_add_integration_test(gateway_service_integration_tests
     SOURCES
         bootstrap_test.cpp
-        file_channel_config_repository_test.cpp
+        file_device_state_repository_test.cpp
     DEPENDENCIES
         project::gateway_composition
-        project::gateway_channel_file_adapter
+        project::gateway_device_file_persistence
         Threads::Threads
 )

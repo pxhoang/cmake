@@ -6,7 +6,7 @@
 #include <string_view>
 #include <utility>
 
-#include "wireless_channel.hpp"
+#include "device_id.hpp"
 
 namespace gateway::infrastructure {
 namespace {
@@ -52,36 +52,35 @@ int ReadInteger(const char* name, int default_value) {
 
 }  // namespace
 
-AppConfig::AppConfig(std::string channel_config_path, int default_channel,
+AppConfig::AppConfig(std::string device_state_path, int default_device_id,
                      int reconcile_interval_milliseconds)
-    : channel_config_path_(std::move(channel_config_path)),
-      default_channel_(default_channel),
+    : device_state_path_(std::move(device_state_path)),
+      default_device_id_(default_device_id),
       reconcile_interval_milliseconds_(reconcile_interval_milliseconds) {}
 
 AppConfig AppConfig::Load() {
-  auto channel_config_path = ReadString(
-      "CHANNEL_CONFIG_PATH", ".img/runtime/gateway_service/channel.state");
-  const int default_channel = ReadInteger("DEFAULT_CHANNEL", 15);
+  auto device_state_path = ReadString(
+      "DEVICE_STATE_PATH", ".img/runtime/gateway_service/device.state");
+  const int default_device_id = ReadInteger("DEFAULT_DEVICE_ID", 1);
   const int reconcile_interval_milliseconds =
       ReadInteger("RECONCILE_INTERVAL_MS", 5000);
 
-  const channel::domain::WirelessChannel validated_default_channel{
-      default_channel};
-  static_cast<void>(validated_default_channel);
+  const device::domain::DeviceId validated_default_device_id{default_device_id};
+  static_cast<void>(validated_default_device_id);
 
   if (reconcile_interval_milliseconds <= 0) {
     throw std::runtime_error("RECONCILE_INTERVAL_MS_must_be_positive");
   }
 
-  return AppConfig(std::move(channel_config_path), default_channel,
+  return AppConfig(std::move(device_state_path), default_device_id,
                    reconcile_interval_milliseconds);
 }
 
-const std::string& AppConfig::ChannelConfigPath() const {
-  return channel_config_path_;
+const std::string& AppConfig::DeviceStatePath() const {
+  return device_state_path_;
 }
 
-int AppConfig::DefaultChannel() const { return default_channel_; }
+int AppConfig::DefaultDeviceId() const { return default_device_id_; }
 
 int AppConfig::ReconcileIntervalMilliseconds() const {
   return reconcile_interval_milliseconds_;

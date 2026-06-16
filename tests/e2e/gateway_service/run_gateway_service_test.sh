@@ -2,20 +2,20 @@
 set -euo pipefail
 
 runtime_dir=".img/runtime/e2e/gateway_service"
-state_path="${runtime_dir}/channel.state"
+state_path="${runtime_dir}/device.state"
 output_path="${runtime_dir}/service.log"
 executable="${1:-./.img/build/debug/src/apps/gateway_service/gateway_service}"
 
 rm -rf "${runtime_dir}"
 mkdir -p "${runtime_dir}"
 
-export CHANNEL_CONFIG_PATH="${state_path}"
+export DEVICE_STATE_PATH="${state_path}"
 
 output="$("${executable}" once)"
 
 echo "${output}"
-grep -F "radio_apply_channel: 15" <<<"${output}"
-grep -F "Current channel: 15" <<<"${output}"
+grep -F "device_apply: 1" <<<"${output}"
+grep -F "Current device: 1" <<<"${output}"
 
 rm -f "${state_path}"
 RECONCILE_INTERVAL_MS=50 "${executable}" serve >"${output_path}" 2>&1 &
@@ -30,14 +30,14 @@ cleanup() {
 trap cleanup EXIT
 
 for _ in {1..50}; do
-  if grep -Fq "Current channel: 15" "${output_path}"; then
+  if grep -Fq "Current device: 1" "${output_path}"; then
     break
   fi
 
   sleep 0.02
 done
 
-grep -F "Current channel: 15" "${output_path}"
+grep -F "Current device: 1" "${output_path}"
 kill -TERM "${service_pid}"
 wait "${service_pid}"
 trap - EXIT

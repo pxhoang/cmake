@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/gateway_service serve
-Environment=CHANNEL_CONFIG_PATH=/var/lib/gateway_service/channel.state
-Environment=DEFAULT_CHANNEL=15
+Environment=DEVICE_STATE_PATH=/var/lib/gateway_service/device.state
+Environment=DEFAULT_DEVICE_ID=1
 Environment=RECONCILE_INTERVAL_MS=5000
 EnvironmentFile=-/etc/gateway_service/gateway_service.env
 StateDirectory=gateway_service

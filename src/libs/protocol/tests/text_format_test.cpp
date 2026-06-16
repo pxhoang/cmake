@@ -2,6 +2,6 @@
 
 #include <gtest/gtest.h>
 
-TEST(TextFormatTest, FormatsChannelMessage) {
-  EXPECT_EQ(protocol::FormatChannelMessage(15), "Current channel: 15");
+TEST(TextFormatTest, FormatsDeviceMessage) {
+  EXPECT_EQ(protocol::FormatDeviceMessage(15), "Current device: 15");
 }

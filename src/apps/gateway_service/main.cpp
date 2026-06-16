@@ -15,21 +15,21 @@ volatile std::sig_atomic_t stop_requested = 0;
 
 void RequestStop(int) { stop_requested = 1; }
 
-void PrintCurrentChannel(gateway::channel::api::ChannelApi& api) {
-  std::cout << api.GetChannelMessage() << std::endl;
+void PrintCurrentDevice(gateway::device::api::DeviceApi& api) {
+  std::cout << api.GetSelectedDeviceMessage() << std::endl;
 }
 
-int RunOnce(gateway::channel::api::ChannelApi& api) {
-  PrintCurrentChannel(api);
+int RunOnce(gateway::device::api::DeviceApi& api) {
+  PrintCurrentDevice(api);
   return 0;
 }
 
-int Serve(gateway::channel::api::ChannelApi& api,
+int Serve(gateway::device::api::DeviceApi& api,
           const gateway::infrastructure::AppConfig& config) {
   std::signal(SIGINT, RequestStop);
   std::signal(SIGTERM, RequestStop);
 
-  PrintCurrentChannel(api);
+  PrintCurrentDevice(api);
 
   const auto interval =
       std::chrono::milliseconds(config.ReconcileIntervalMilliseconds());
@@ -38,7 +38,7 @@ int Serve(gateway::channel::api::ChannelApi& api,
     std::this_thread::sleep_for(interval);
 
     if (stop_requested == 0) {
-      api.ReconcileChannel();
+      api.ReconcileDevice();
     }
   }
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 
     const auto config = gateway::infrastructure::AppConfig::Load();
     gateway::bootstrap::Bootstrap bootstrap;
-    auto api = bootstrap.CreateChannelApi(config);
+    auto api = bootstrap.CreateDeviceApi(config);
 
     if (command == "serve") {
       return Serve(api, config);

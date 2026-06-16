@@ -15,17 +15,17 @@ class BootstrapTest : public ::testing::Test {
  protected:
   void SetUp() override {
     path = std::filesystem::path(".img/runtime/tests") /
-           ("bootstrap_" + std::to_string(::getpid())) / "channel.state";
+           ("bootstrap_" + std::to_string(::getpid())) / "device.state";
     std::filesystem::remove_all(path.parent_path());
 
-    setenv("CHANNEL_CONFIG_PATH", path.c_str(), 1);
-    setenv("DEFAULT_CHANNEL", "20", 1);
+    setenv("DEVICE_STATE_PATH", path.c_str(), 1);
+    setenv("DEFAULT_DEVICE_ID", "20", 1);
     setenv("RECONCILE_INTERVAL_MS", "50", 1);
   }
 
   void TearDown() override {
-    unsetenv("CHANNEL_CONFIG_PATH");
-    unsetenv("DEFAULT_CHANNEL");
+    unsetenv("DEVICE_STATE_PATH");
+    unsetenv("DEFAULT_DEVICE_ID");
     unsetenv("RECONCILE_INTERVAL_MS");
     std::filesystem::remove_all(path.parent_path());
   }
@@ -33,13 +33,13 @@ class BootstrapTest : public ::testing::Test {
   std::filesystem::path path;
 };
 
-TEST_F(BootstrapTest, WiresAdaptersAndInitializesDefaultChannel) {
+TEST_F(BootstrapTest, WiresAdaptersAndInitializesDefaultDeviceId) {
   const auto config = gateway::infrastructure::AppConfig::Load();
   gateway::bootstrap::Bootstrap bootstrap;
 
-  auto api = bootstrap.CreateChannelApi(config);
+  auto api = bootstrap.CreateDeviceApi(config);
 
-  EXPECT_EQ(api.GetChannel(), 20);
+  EXPECT_EQ(api.GetSelectedDevice(), 20);
   EXPECT_TRUE(std::filesystem::exists(path));
 }
 

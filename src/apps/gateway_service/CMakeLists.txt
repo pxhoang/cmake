@@ -1,4 +1,4 @@
-add_subdirectory(features/channel)
+add_subdirectory(features/device)
 add_subdirectory(infrastructure/config)
 add_subdirectory(bootstrap)
 

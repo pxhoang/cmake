@@ -2,8 +2,8 @@
 
 namespace protocol {
 
-std::string FormatChannelMessage(int channel) {
-  return "Current channel: " + std::to_string(channel);
+std::string FormatDeviceMessage(int device_id) {
+  return "Current device: " + std::to_string(device_id);
 }
 
 }  // namespace protocol

@@ -4,5 +4,5 @@ project_add_library(gateway_config
     PUBLIC_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC_DEPENDENCIES
-        project::gateway_channel_domain
+        project::gateway_device_domain
 )

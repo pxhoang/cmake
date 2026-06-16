@@ -35,7 +35,7 @@ graph TD
 - Link only direct dependencies.
 - Use `PUBLIC` dependencies only when exposed by public headers.
 - Keep executable `main.cpp` thin and move behavior into testable libraries.
-- Link concrete adapters only from a composition target.
+- Link concrete adapters and persistence only from a composition target.
 - Add a unit test with every behavior change.
 
 ## Add A Library
@@ -112,6 +112,69 @@ add_subdirectory(example_service)
 ```
 
 `INSTALL` installs the executable to `${CMAKE_INSTALL_BINDIR}`.
+
+## Add A Feature
+
+Use the `device` feature as the template:
+
+```text
+features/example/
+├── CMakeLists.txt
+├── domain/
+├── application/
+├── api/
+├── adapters/
+└── persistence/
+```
+
+The feature root only wires subdirectories:
+
+```cmake
+add_subdirectory(domain)
+add_subdirectory(application)
+add_subdirectory(api)
+add_subdirectory(adapters)
+add_subdirectory(persistence)
+```
+
+Use interface targets for pure header-only layers:
+
+```cmake
+project_add_interface_library(gateway_example_domain
+    INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+project_add_interface_library(gateway_example_application
+    INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDENCIES
+        project::gateway_example_domain
+)
+```
+
+Use compiled library targets for concrete adapters and persistence:
+
+```cmake
+project_add_library(gateway_example_file_persistence
+    SOURCES
+        file_example_repository.cpp
+    PUBLIC_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC_DEPENDENCIES
+        project::gateway_example_application
+)
+```
+
+Composition is the only target that links concrete implementations:
+
+```cmake
+target_link_libraries(gateway_example_composition
+    PRIVATE
+        project::gateway_example_file_persistence
+        project::gateway_example_console_adapter
+)
+```
 
 ## Add Tests
 
@@ -190,8 +253,8 @@ Run the complete suite with sanitizers and warnings as errors:
 
 ## Presets
 
-Presets use the Ninja generator. Local builds require CMake, Ninja, and a C++
-compiler; Docker builds provide those tools in the development image.
+Presets use the Unix Makefiles generator. Local builds require CMake, Make, and
+a C++ compiler; Docker builds provide those tools in the development image.
 
 | Preset | Tests built | Purpose |
 |--------|-------------|---------|
@@ -227,10 +290,13 @@ graph TD
     Composition --> API
     Composition --> Config
     Composition --> Adapters
+    Composition --> Persistence
     API --> Application
     Adapters --> Application
+    Persistence --> Application
     Application --> Domain
 ```
 
 Domain and application targets must not depend on infrastructure or concrete
-adapters. These rules remain visible and enforceable through target links.
+adapters/persistence. These rules remain visible and enforceable through target
+links.

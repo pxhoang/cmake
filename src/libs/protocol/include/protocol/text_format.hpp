@@ -4,6 +4,6 @@
 
 namespace protocol {
 
-std::string FormatChannelMessage(int channel);
+std::string FormatDeviceMessage(int device_id);
 
 }  // namespace protocol

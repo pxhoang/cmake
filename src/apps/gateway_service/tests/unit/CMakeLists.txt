@@ -1,29 +1,29 @@
-project_add_unit_test(gateway_service_channel_domain_test
+project_add_unit_test(gateway_service_device_domain_test
     SOURCES
-        channel_domain_test.cpp
+        device_domain_test.cpp
     DEPENDENCIES
-        project::gateway_channel_domain
+        project::gateway_device_domain
 )
 
-project_add_unit_test(gateway_service_set_channel_use_case_test
+project_add_unit_test(gateway_service_select_device_use_case_test
     SOURCES
-        set_channel_use_case_test.cpp
+        select_device_use_case_test.cpp
     DEPENDENCIES
-        project::gateway_channel_application
+        project::gateway_device_application
 )
 
-project_add_unit_test(gateway_service_reconcile_channel_use_case_test
+project_add_unit_test(gateway_service_reconcile_device_use_case_test
     SOURCES
-        reconcile_channel_use_case_test.cpp
+        reconcile_device_use_case_test.cpp
     DEPENDENCIES
-        project::gateway_channel_application
+        project::gateway_device_application
 )
 
-project_add_unit_test(gateway_service_channel_api_test
+project_add_unit_test(gateway_service_device_api_test
     SOURCES
-        channel_api_test.cpp
+        device_api_test.cpp
     DEPENDENCIES
-        project::gateway_channel_api
+        project::gateway_device_api
 )
 
 project_add_unit_test(gateway_service_app_config_test

@@ -28,7 +28,7 @@ docs/      Architecture, development, and operations documentation
 
 ## Build locally
 
-Requires CMake, Ninja, and a C++ compiler.
+Requires CMake, Make, and a C++ compiler.
 
 ```bash
 ./tooling/scripts/build.sh
@@ -71,8 +71,8 @@ service uses long-running reconciliation mode:
 Expected output:
 
 ```text
-radio_apply_channel: 15
-Current channel: 15
+device_apply: 1
+Current device: 1
 ```
 
 ## Build/test/run with Docker
@@ -82,7 +82,7 @@ Current channel: 15
 ./tooling/scripts/docker-run.sh gateway_service
 ```
 
-You only need Docker installed on your PC. The container provides CMake, Ninja, and G++.
+You only need Docker installed on your PC. The container provides CMake, Make, and G++.
 
 The run scripts accept any application directory under `src/apps/`, so adding an
 application does not require another script:
@@ -102,19 +102,30 @@ See `docs/development/cmake.md`.
 
 ## Architecture flow
 
+The `device` feature is the sample for future features:
+
+```text
+features/device/
+├── domain/
+├── application/
+├── api/
+├── adapters/
+└── persistence/
+```
+
 ```mermaid
 graph TD
     Host["gateway_service"] --> Composition["gateway_composition"]
-    Composition --> API["gateway_channel_api"]
-    API --> Application["gateway_channel_application"]
-    Application --> Domain["gateway_channel_domain"]
-    Composition --> FileAdapter["gateway_channel_file_adapter"]
-    Composition --> RadioAdapter["gateway_channel_radio_adapter"]
-    FileAdapter --> Application
-    RadioAdapter --> Application
+    Composition --> API["gateway_device_api"]
+    API --> Application["gateway_device_application"]
+    Application --> Domain["gateway_device_domain"]
+    Composition --> Persistence["gateway_device_file_persistence"]
+    Composition --> ConsoleAdapter["gateway_device_console_adapter"]
+    Persistence --> Application
+    ConsoleAdapter --> Application
 ```
 
-The repository stores desired and applied channel state separately. Failed
+The repository stores desired and applied device state separately. Failed
 device operations leave desired state pending for the daemon to reconcile.
 
 ## Generated output policy

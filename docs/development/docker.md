@@ -1,6 +1,7 @@
 # Docker Development Environment
 
-This project can be built, tested, and run inside Docker so the host machine does not need CMake, Ninja, or a C++ compiler installed.
+This project can be built, tested, and run inside Docker so the host machine
+does not need CMake, Make, or a C++ compiler installed.
 
 The only host requirement is Docker.
 
@@ -25,8 +26,8 @@ The only host requirement is Docker.
 Expected output:
 
 ```text
-radio_apply_channel: 15
-Current channel: 15
+device_apply: 1
+Current device: 1
 ```
 
 ## Open an interactive build shell
@@ -54,14 +55,15 @@ repository root as the Docker build context.
 
 ## Output policy
 
-The container bind-mounts the project into `/workspace`.
-All generated files still go to `.img/` in the project root.
+The container bind-mounts the project at the same absolute path used by the
+host. That keeps CMake caches and `compile_commands.json` usable by editors on
+the host. All generated files still go to `.img/` in the project root.
 
 Examples:
 
 ```text
 .img/build/debug/
-.img/runtime/gateway_service/channel.state
+.img/runtime/gateway_service/device.state
 .img/package/
 ```
 

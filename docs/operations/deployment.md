@@ -3,7 +3,7 @@
 `gateway_service` can be installed as a systemd service.
 
 The service runs `gateway_service serve`, handles SIGTERM, and periodically
-reconciles desired channel state with applied device state.
+reconciles desired device state with applied device state.
 
 Repository-owned configuration and deployment assets live under `ops/config/`
 and `ops/deploy/`.
@@ -17,7 +17,7 @@ Runtime config is provided through:
 Default production state is stored at:
 
 ```text
-/var/lib/gateway_service/channel.state
+/var/lib/gateway_service/device.state
 ```
 
 The systemd unit creates this directory through `StateDirectory`.

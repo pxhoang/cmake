@@ -8,16 +8,16 @@ class AppConfig {
  public:
   static AppConfig Load();
 
-  const std::string& ChannelConfigPath() const;
-  int DefaultChannel() const;
+  const std::string& DeviceStatePath() const;
+  int DefaultDeviceId() const;
   int ReconcileIntervalMilliseconds() const;
 
  private:
-  AppConfig(std::string channel_config_path, int default_channel,
+  AppConfig(std::string device_state_path, int default_device_id,
             int reconcile_interval_milliseconds);
 
-  std::string channel_config_path_;
-  int default_channel_;
+  std::string device_state_path_;
+  int default_device_id_;
   int reconcile_interval_milliseconds_;
 };
 
