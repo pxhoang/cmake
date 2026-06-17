@@ -53,6 +53,11 @@ Both run commands accept any application directory under `src/apps/`:
 Docker definitions live under `tooling/docker/`. The helper scripts keep the
 repository root as the Docker build context.
 
+The shell scripts are the preferred Docker entry point because they mount the
+repository at the same absolute path inside the container. Direct Docker Compose
+usage is supported for ad hoc shells, but the scripts are what keep editor
+compile databases and CMake caches path-stable.
+
 ## Output policy
 
 The container bind-mounts the project at the same absolute path used by the

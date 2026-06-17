@@ -4,9 +4,9 @@ services:
       context: ../..
       dockerfile: tooling/docker/Dockerfile
     image: sample-clean-cpp-dev:latest
-    working_dir: /workspace
+    working_dir: ${PROJECT_ROOT:-/workspace}
     volumes:
-      - ../..:/workspace
+      - ${PROJECT_ROOT:-../..}:${PROJECT_ROOT:-/workspace}
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       HOME: /tmp

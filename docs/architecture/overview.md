@@ -39,17 +39,17 @@ ownership, but those folders are not mirrored as nested C++ namespaces.
 
 ## Target Graph
 
-```mermaid
-graph TD
-    Service["gateway_service"] --> Composition["gateway_composition"]
-    Composition --> API["gateway_device_api"]
-    Composition --> Config["gateway_config"]
-    Composition --> Persistence["gateway_device_file_persistence"]
-    Composition --> ConsoleAdapter["gateway_device_console_adapter"]
-    API --> Application["gateway_device_application"]
-    Persistence --> Application
-    ConsoleAdapter --> Application
-    Application --> Domain["gateway_device_domain"]
+```text
+gateway_service
+└── gateway_composition
+    ├── gateway_config
+    ├── gateway_device_api
+    │   └── gateway_device_application
+    │       └── gateway_device_domain
+    ├── gateway_device_file_persistence
+    │   └── gateway_device_application
+    └── gateway_device_console_adapter
+        └── gateway_device_application
 ```
 
 The API is currently an in-process C++ function-call API. The executable has:

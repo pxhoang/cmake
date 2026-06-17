@@ -114,16 +114,16 @@ features/device/
     └── persistence/
 ```
 
-```mermaid
-graph TD
-    Host["gateway_service"] --> Composition["gateway_composition"]
-    Composition --> API["gateway_device_api"]
-    API --> Application["gateway_device_application"]
-    Application --> Domain["gateway_device_domain"]
-    Composition --> Persistence["gateway_device_file_persistence"]
-    Composition --> ConsoleAdapter["gateway_device_console_adapter"]
-    Persistence --> Application
-    ConsoleAdapter --> Application
+```text
+gateway_service
+└── gateway_composition
+    ├── gateway_device_api
+    │   └── gateway_device_application
+    │       └── gateway_device_domain
+    ├── gateway_device_file_persistence
+    │   └── gateway_device_application
+    └── gateway_device_console_adapter
+        └── gateway_device_application
 ```
 
 Persistence is implemented as an adapter. The application layer owns the

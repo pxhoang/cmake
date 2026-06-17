@@ -5,18 +5,12 @@ Each component owns its sources, includes, dependencies, and tests.
 
 ## Architecture
 
-```mermaid
-graph TD
-    Root["Root CMakeLists.txt"] --> Source["src/"]
-    Source --> Libraries["src/libs/"]
-    Source --> Applications["src/apps/"]
-    Libraries --> Unit["Source-local unit tests"]
-    Applications --> Unit
-    Root --> Tests["Cross-component tests/"]
-    Libraries --> PublicTargets["project::library"]
-    Applications --> ComponentTargets["project::feature_layer"]
-    Tests --> Integration["integration"]
-    Tests --> E2E["e2e"]
+```text
+Root CMakeLists.txt
+├── src/
+│   ├── libs/    -> project::library targets + source-local unit tests
+│   └── apps/    -> project::feature_layer targets + source-local unit tests
+└── tests/       -> cross-component integration and e2e tests
 ```
 
 | File | Responsibility |
@@ -296,15 +290,17 @@ The `release` preset is intended for production packaging:
 
 ## Dependency Direction
 
-```mermaid
-graph TD
-    Executable --> Composition
-    Composition --> API
-    Composition --> Config
-    Composition --> Adapters
-    API --> Application
-    Adapters --> Application
-    Application --> Domain
+```text
+Executable
+└── Composition
+    ├── API
+    │   └── Application
+    │       └── Domain
+    ├── Config
+    ├── Adapters
+    │   └── Application
+    └── Persistence
+        └── Application
 ```
 
 Domain and application targets must not depend on infrastructure or concrete
