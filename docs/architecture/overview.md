@@ -14,10 +14,10 @@ src/apps/gateway_service/features/device/
 ├── domain/          # Pure business types and rules
 ├── application/     # Use cases and ports
 ├── api/             # In-process input adapter used by the service
-├── adapters/        # External side-effect adapters, excluding persistence
-│   └── console/
-└── persistence/     # State storage adapters
-    └── file/
+└── adapters/        # External side-effect adapters
+    ├── console/
+    └── persistence/
+        └── file/
 ```
 
 `application` owns the ports:
@@ -27,7 +27,7 @@ src/apps/gateway_service/features/device/
 
 Outer layers implement those ports:
 
-- `persistence/file/FileDeviceStateRepository`
+- `adapters/persistence/file/FileDeviceStateRepository`
 - `adapters/console/ConsoleDeviceController`
 
 `bootstrap` is the composition root. It is the only place that should know
@@ -60,9 +60,8 @@ The API is currently an in-process C++ function-call API. The executable has:
 | `domain` | Business types and invariants | Nothing project-specific |
 | `application` | Use cases and ports | `domain` |
 | `api` | Input adapter for callers inside the process | `application` |
-| `adapters` | Non-persistence external mechanisms | `application` ports |
-| `persistence` | Storage mechanisms | `application` ports |
+| `adapters` | External mechanisms, including persistence | `application` ports |
 | `bootstrap` | Object graph composition | Concrete outer layers |
 
-Do not place persistence code under `adapters/`. Persistence is an outer
-adapter, but it is important enough to keep as a named layer in this sample.
+Persistence code belongs under `adapters/persistence/`. The application layer
+owns storage ports, and concrete storage implementations are adapter details.

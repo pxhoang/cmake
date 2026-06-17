@@ -109,8 +109,9 @@ features/device/
 ├── domain/
 ├── application/
 ├── api/
-├── adapters/
-└── persistence/
+└── adapters/
+    ├── console/
+    └── persistence/
 ```
 
 ```mermaid
@@ -124,6 +125,10 @@ graph TD
     Persistence --> Application
     ConsoleAdapter --> Application
 ```
+
+Persistence is implemented as an adapter. The application layer owns the
+repository port; `adapters/persistence/file` provides the file-backed
+implementation.
 
 The repository stores desired and applied device state separately. Failed
 device operations leave desired state pending for the daemon to reconcile.

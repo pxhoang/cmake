@@ -35,7 +35,7 @@ graph TD
 - Link only direct dependencies.
 - Use `PUBLIC` dependencies only when exposed by public headers.
 - Keep executable `main.cpp` thin and move behavior into testable libraries.
-- Link concrete adapters and persistence only from a composition target.
+- Link concrete adapters, including persistence, only from a composition target.
 - Add a unit test with every behavior change.
 
 ## Add A Library
@@ -123,8 +123,9 @@ features/example/
 ├── domain/
 ├── application/
 ├── api/
-├── adapters/
-└── persistence/
+└── adapters/
+    ├── console/
+    └── persistence/
 ```
 
 The feature root only wires subdirectories:
@@ -134,6 +135,12 @@ add_subdirectory(domain)
 add_subdirectory(application)
 add_subdirectory(api)
 add_subdirectory(adapters)
+```
+
+The adapter directory wires concrete adapter categories:
+
+```cmake
+add_subdirectory(console)
 add_subdirectory(persistence)
 ```
 
@@ -153,7 +160,7 @@ project_add_interface_library(gateway_example_application
 )
 ```
 
-Use compiled library targets for concrete adapters and persistence:
+Use compiled library targets for concrete adapters, including persistence:
 
 ```cmake
 project_add_library(gateway_example_file_persistence
@@ -290,13 +297,11 @@ graph TD
     Composition --> API
     Composition --> Config
     Composition --> Adapters
-    Composition --> Persistence
     API --> Application
     Adapters --> Application
-    Persistence --> Application
     Application --> Domain
 ```
 
 Domain and application targets must not depend on infrastructure or concrete
-adapters/persistence. These rules remain visible and enforceable through target
-links.
+adapters. Persistence implementations are adapters and follow the same rule.
+These rules remain visible and enforceable through target links.

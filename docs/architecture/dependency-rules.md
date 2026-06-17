@@ -5,19 +5,17 @@ Allowed:
 - `api -> application`
 - `application -> domain`
 - `adapters -> application ports`
-- `persistence -> application ports`
+- `adapters/persistence -> application ports`
 - `bootstrap -> concrete classes`
 
 Forbidden:
 
 - `domain -> api`
-- `domain -> persistence`
+- `domain -> adapters`
 - `domain -> infrastructure`
-- `application -> concrete persistence`
-- `application -> concrete adapters`
+- `application -> concrete adapter implementations`
 - `application -> external vendor SDK`
-- `api -> concrete adapters`
-- `api -> persistence`
+- `api -> concrete adapter implementations`
 
 ## Enforcement
 
@@ -26,7 +24,7 @@ Source files use target-provided include directories instead of parent-relative
 includes.
 
 The composition target is the only target allowed to depend on concrete
-adapters or persistence implementations.
+adapters, including persistence implementations.
 
 ## Feature Template
 
@@ -37,10 +35,12 @@ features/<feature>/
 ├── domain/
 ├── application/
 ├── api/
-├── adapters/
-└── persistence/
+└── adapters/
+    ├── console/
+    └── persistence/
 ```
 
-Ports live in `application`. Implementations live in `adapters/` or
-`persistence/`. Tests for application behavior should use fakes and should not
-link concrete persistence or external adapters.
+Ports live in `application`. Implementations live in `adapters/`, including
+persistence implementations under `adapters/persistence/`. Tests for
+application behavior should use fakes and should not link concrete adapter
+implementations.
