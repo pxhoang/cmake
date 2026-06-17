@@ -7,7 +7,8 @@
 - `tests/` contains cross-component integration and end-to-end tests.
 - `tooling/` contains CMake modules, scripts, Docker, and dependencies.
 - `ops/` contains runtime configuration and deployment assets.
-- `docs/` contains architecture, development, and operations guidance.
+- `docs/` contains ADR, architecture, development, operations, and Spec Kit
+  guidance.
 - `.img/` contains generated/downloaded/build/package output.
 
 ## Reason

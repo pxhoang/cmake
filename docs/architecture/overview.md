@@ -1,23 +1,30 @@
 # Architecture Overview
 
-The project uses feature-oriented Clean Architecture inside each binary.
-Architectural layers are separate CMake targets, so forbidden dependencies fail
-at compile time instead of relying only on directory conventions.
+Projects governed by this documentation use feature-oriented Clean Architecture
+inside each executable application. Architectural layers are separate CMake
+targets, so forbidden dependencies fail at compile time instead of relying only
+on directory conventions.
+
+Generic binding rules live in:
+
+- `docs/architecture/architecture.md`
+- `docs/architecture/dependency-rules.md`
+- `docs/architecture/cmake-target-boundaries.md`
 
 ## Gateway Device Feature
 
-The current sample feature is `device`. It is intentionally small, but it uses
-the same layout expected for future features:
+The current repository includes `gateway_service` and its `device` feature as a
+concrete example of the required architecture:
 
 ```text
 src/apps/gateway_service/features/device/
-├── domain/          # Pure business types and rules
-├── application/     # Use cases and ports
-├── api/             # In-process input adapter used by the service
-└── adapters/        # External side-effect adapters
-    ├── console/
-    └── persistence/
-        └── file/
+|-- domain/          # Pure business types and rules
+|-- application/     # Use cases and ports
+|-- api/             # In-process input adapter used by the service
+`-- adapters/        # External side-effect adapters
+    |-- console/
+    `-- persistence/
+        `-- file/
 ```
 
 `application` owns the ports:
@@ -41,15 +48,15 @@ ownership, but those folders are not mirrored as nested C++ namespaces.
 
 ```text
 gateway_service
-└── gateway_composition
-    ├── gateway_config
-    ├── gateway_device_api
-    │   └── gateway_device_application
-    │       └── gateway_device_domain
-    ├── gateway_device_file_persistence
-    │   └── gateway_device_application
-    └── gateway_device_console_adapter
-        └── gateway_device_application
+`-- gateway_composition
+    |-- gateway_config
+    |-- gateway_device_api
+    |   `-- gateway_device_application
+    |       `-- gateway_device_domain
+    |-- gateway_device_file_persistence
+    |   `-- gateway_device_application
+    `-- gateway_device_console_adapter
+        `-- gateway_device_application
 ```
 
 The API is currently an in-process C++ function-call API. The executable has:

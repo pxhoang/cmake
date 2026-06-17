@@ -1,51 +1,60 @@
 # Dependency Rules
 
-Allowed:
+Dependencies MUST point inward. Inner layers own policy. Outer layers own
+mechanisms.
 
-- `api -> application`
-- `application -> domain`
-- `adapters -> application ports`
-- `adapters/persistence -> application ports`
-- `bootstrap -> concrete classes`
+## Allowed Dependencies
 
-Forbidden:
+```text
+api -> application
+application -> domain
+adapters -> application ports
+adapters/persistence -> application ports
+bootstrap -> concrete outer layers
+```
 
-- `domain -> api`
-- `domain -> adapters`
-- `domain -> infrastructure`
-- `application -> concrete adapter implementations`
-- `application -> external vendor SDK`
-- `api -> concrete adapter implementations`
+## Forbidden Dependencies
+
+```text
+domain -> api
+domain -> adapters
+domain -> infrastructure
+domain -> vendor SDKs
+application -> concrete adapter implementations
+application -> external vendor SDKs
+api -> concrete adapter implementations
+api -> persistence implementations
+```
 
 ## Enforcement
 
-Each layer is a separate CMake target with only its direct dependencies exposed.
-Source files use target-provided include directories instead of parent-relative
-includes.
+Each layer MUST be a separate CMake target with only its direct dependencies
+exposed. Source files MUST use target-provided include directories instead of
+parent-relative includes.
 
 The composition target is the only target allowed to depend on concrete
 adapters, including persistence implementations.
 
+Ports live in `application`. Implementations live in `adapters/`, including
+persistence implementations under `adapters/persistence/`.
+
+Application behavior tests MUST use fakes for ports and MUST NOT link concrete
+adapter implementations.
+
 ## Feature Template
 
-New features should follow this shape unless there is a concrete reason not to:
+New features MUST follow this shape unless the constitution is amended:
 
 ```text
 features/<feature>/
-├── domain/
-├── application/
-├── api/
-└── adapters/
-    ├── console/
-    └── persistence/
+|-- domain/
+|-- application/
+|-- api/
+`-- adapters/
+    |-- console/
+    `-- persistence/
 ```
 
-Ports live in `application`. Implementations live in `adapters/`, including
-persistence implementations under `adapters/persistence/`. Tests for
-application behavior should use fakes and should not link concrete adapter
-implementations.
-
-For `gateway_service`, these directory boundaries are architectural, not
-namespace boundaries. Public C++ types use the shared `gateway_service`
-namespace even when they live under `domain/`, `application/`, `api/`, or
-`adapters/`.
+Directory boundaries are architectural boundaries. Public application-owned C++
+types use one shared application namespace; layer folders MUST NOT be mirrored
+as nested C++ namespaces.

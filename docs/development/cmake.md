@@ -7,10 +7,10 @@ Each component owns its sources, includes, dependencies, and tests.
 
 ```text
 Root CMakeLists.txt
-├── src/
-│   ├── libs/    -> project::library targets + source-local unit tests
-│   └── apps/    -> project::feature_layer targets + source-local unit tests
-└── tests/       -> cross-component integration and e2e tests
+|-- src/
+|   |-- libs/    -> project::library targets + source-local unit tests
+|   `-- apps/    -> project::feature_layer targets + source-local unit tests
+`-- tests/       -> cross-component integration and e2e tests
 ```
 
 | File | Responsibility |
@@ -109,17 +109,17 @@ add_subdirectory(example_service)
 
 ## Add A Feature
 
-Use the `device` feature as the template:
+Use the standard feature layout:
 
 ```text
 features/example/
-├── CMakeLists.txt
-├── domain/
-├── application/
-├── api/
-└── adapters/
-    ├── console/
-    └── persistence/
+|-- CMakeLists.txt
+|-- domain/
+|-- application/
+|-- api/
+`-- adapters/
+    |-- console/
+    `-- persistence/
 ```
 
 The feature root only wires subdirectories:
@@ -138,47 +138,46 @@ add_subdirectory(console)
 add_subdirectory(persistence)
 ```
 
-Keep CMake target boundaries and C++ namespace boundaries separate. In
-`gateway_service`, the feature still uses `domain/`, `application/`, `api/`,
-and `adapters/` directories and targets, but the exported C++ symbols live in
-the single `gateway_service` namespace.
+Keep CMake target boundaries and C++ namespace boundaries separate. Features
+use `domain/`, `application/`, `api/`, and `adapters/` directories and targets,
+but exported C++ symbols live in the application's shared namespace.
 
 Use interface targets for pure header-only layers:
 
 ```cmake
-project_add_interface_library(gateway_example_domain
+project_add_interface_library(example_feature_domain
     INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-project_add_interface_library(gateway_example_application
+project_add_interface_library(example_feature_application
     INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDENCIES
-        project::gateway_example_domain
+        project::example_feature_domain
 )
 ```
 
 Use compiled library targets for concrete adapters, including persistence:
 
 ```cmake
-project_add_library(gateway_example_file_persistence
+project_add_library(example_feature_file_persistence
     SOURCES
         file_example_repository.cpp
     PUBLIC_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC_DEPENDENCIES
-        project::gateway_example_application
+        project::example_feature_application
 )
 ```
 
 Composition is the only target that links concrete implementations:
 
 ```cmake
-target_link_libraries(gateway_example_composition
+target_link_libraries(example_composition
     PRIVATE
-        project::gateway_example_file_persistence
-        project::gateway_example_console_adapter
+        project::example_feature_file_persistence
+        project::example_feature_console_adapter
 )
 ```
 
@@ -292,15 +291,15 @@ The `release` preset is intended for production packaging:
 
 ```text
 Executable
-└── Composition
-    ├── API
-    │   └── Application
-    │       └── Domain
-    ├── Config
-    ├── Adapters
-    │   └── Application
-    └── Persistence
-        └── Application
+`-- Composition
+    |-- API
+    |   `-- Application
+    |       `-- Domain
+    |-- Config
+    |-- Adapters
+    |   `-- Application
+    `-- Persistence
+        `-- Application
 ```
 
 Domain and application targets must not depend on infrastructure or concrete

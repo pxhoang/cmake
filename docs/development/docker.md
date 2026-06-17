@@ -20,14 +20,13 @@ The only host requirement is Docker.
 ## Run inside Docker
 
 ```bash
-./tooling/scripts/docker-run.sh gateway_service
+./tooling/scripts/docker-run.sh <app>
 ```
 
-Expected output:
+For the current sample application:
 
-```text
-device_apply: 1
-Current device: 1
+```bash
+./tooling/scripts/docker-run.sh gateway_service
 ```
 
 ## Open an interactive build shell
@@ -40,7 +39,7 @@ Inside the shell, you can run:
 
 ```bash
 ./tooling/scripts/test.sh
-./tooling/scripts/run.sh gateway_service
+./tooling/scripts/run.sh <app>
 ```
 
 Both run commands accept any application directory under `src/apps/`:
@@ -68,7 +67,7 @@ Examples:
 
 ```text
 .img/build/debug/
-.img/runtime/gateway_service/device.state
+.img/runtime/<app>/
 .img/package/
 ```
 

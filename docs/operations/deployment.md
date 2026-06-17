@@ -1,37 +1,30 @@
 # Deployment
 
-`gateway_service` can be installed as a systemd service.
+Deployment assets belong under `ops/deploy/`. Runtime configuration examples
+and defaults belong under `ops/config/`.
 
-The service runs `gateway_service serve`, handles SIGTERM, and periodically
-reconciles desired device state with applied device state.
+Application-specific deployment details MUST document:
 
-Repository-owned configuration and deployment assets live under `ops/config/`
-and `ops/deploy/`.
+1. Service entry point and runtime mode.
+2. Shutdown behavior for SIGINT and SIGTERM.
+3. Runtime configuration files and environment variables.
+4. State directories and generated runtime files.
+5. Required permissions, ownership, and service-manager settings.
+6. Packaging command and package output location.
+7. Operational rollback or cleanup considerations when relevant.
 
-Runtime config is provided through:
-
-```text
-/etc/gateway_service/gateway_service.env
-```
-
-Default production state is stored at:
-
-```text
-/var/lib/gateway_service/device.state
-```
-
-The systemd unit creates this directory through `StateDirectory`.
-
-Generated package output must be created under:
+Generated package output MUST be created under:
 
 ```text
 .img/package/
 ```
 
-Build a release package with:
+Generated runtime output MUST be created under:
 
-```bash
-cmake --preset release
-cmake --build --preset release
-cpack --config .img/build/release/CPackConfig.cmake -B .img/package
+```text
+.img/runtime/
 ```
+
+Application-specific deployment examples MAY live in `docs/operations/` when
+they describe real deployed behavior, but they MUST NOT weaken the generic
+deployment rules above.
