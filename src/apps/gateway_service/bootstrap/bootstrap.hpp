@@ -3,12 +3,11 @@
 #include "app_config.hpp"
 #include "device_api.hpp"
 
-namespace gateway::bootstrap {
+namespace gateway_service {
 
 class Bootstrap {
  public:
-  device::api::DeviceApi CreateDeviceApi(
-      const infrastructure::AppConfig& config);
+  DeviceApi CreateDeviceApi(const AppConfig& config);
 };
 
-}  // namespace gateway::bootstrap
+}  // namespace gateway_service

@@ -2,14 +2,14 @@
 
 #include "device_state.hpp"
 
-namespace gateway::device::application {
+namespace gateway_service {
 
 class DeviceStateRepository {
  public:
   virtual ~DeviceStateRepository() = default;
 
-  virtual domain::DeviceState Load() = 0;
-  virtual void Save(const domain::DeviceState& state) = 0;
+  virtual DeviceState Load() = 0;
+  virtual void Save(const DeviceState& state) = 0;
 };
 
-}  // namespace gateway::device::application
+}  // namespace gateway_service

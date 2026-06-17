@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace gateway::infrastructure {
+namespace gateway_service {
 
 class AppConfig {
  public:
@@ -21,4 +21,4 @@ class AppConfig {
   int reconcile_interval_milliseconds_;
 };
 
-}  // namespace gateway::infrastructure
+}  // namespace gateway_service

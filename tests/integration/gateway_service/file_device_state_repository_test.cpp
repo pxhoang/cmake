@@ -10,9 +10,9 @@
 
 namespace {
 
-using gateway::device::domain::DeviceId;
-using gateway::device::domain::DeviceState;
-using gateway::device::persistence::FileDeviceStateRepository;
+using gateway_service::DeviceId;
+using gateway_service::DeviceState;
+using gateway_service::FileDeviceStateRepository;
 
 class FileDeviceStateRepositoryTest : public ::testing::Test {
  protected:

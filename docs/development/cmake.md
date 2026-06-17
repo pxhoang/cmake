@@ -144,6 +144,11 @@ add_subdirectory(console)
 add_subdirectory(persistence)
 ```
 
+Keep CMake target boundaries and C++ namespace boundaries separate. In
+`gateway_service`, the feature still uses `domain/`, `application/`, `api/`,
+and `adapters/` directories and targets, but the exported C++ symbols live in
+the single `gateway_service` namespace.
+
 Use interface targets for pure header-only layers:
 
 ```cmake

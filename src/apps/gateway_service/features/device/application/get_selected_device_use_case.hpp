@@ -6,7 +6,7 @@
 
 #include "device_state_repository.hpp"
 
-namespace gateway::device::application {
+namespace gateway_service {
 
 class GetSelectedDeviceUseCase {
  public:
@@ -14,7 +14,7 @@ class GetSelectedDeviceUseCase {
       std::shared_ptr<DeviceStateRepository> repository)
       : repository_(std::move(repository)) {}
 
-  domain::DeviceId Execute() {
+  DeviceId Execute() {
     const auto state = repository_->Load();
 
     if (!state.desired.has_value()) {
@@ -28,4 +28,4 @@ class GetSelectedDeviceUseCase {
   std::shared_ptr<DeviceStateRepository> repository_;
 };
 
-}  // namespace gateway::device::application
+}  // namespace gateway_service

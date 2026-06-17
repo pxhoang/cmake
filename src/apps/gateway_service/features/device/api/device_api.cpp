@@ -4,14 +4,12 @@
 
 #include "protocol/text_format.hpp"
 
-namespace gateway::device::api {
+namespace gateway_service {
 
 DeviceApi::DeviceApi(
-    std::shared_ptr<application::SelectDeviceUseCase> select_device_use_case,
-    std::shared_ptr<application::GetSelectedDeviceUseCase>
-        get_selected_device_use_case,
-    std::shared_ptr<application::ReconcileDeviceUseCase>
-        reconcile_device_use_case)
+    std::shared_ptr<SelectDeviceUseCase> select_device_use_case,
+    std::shared_ptr<GetSelectedDeviceUseCase> get_selected_device_use_case,
+    std::shared_ptr<ReconcileDeviceUseCase> reconcile_device_use_case)
     : select_device_use_case_(std::move(select_device_use_case)),
       get_selected_device_use_case_(std::move(get_selected_device_use_case)),
       reconcile_device_use_case_(std::move(reconcile_device_use_case)) {}
@@ -32,4 +30,4 @@ bool DeviceApi::ReconcileDevice() {
   return reconcile_device_use_case_->Execute();
 }
 
-}  // namespace gateway::device::api
+}  // namespace gateway_service

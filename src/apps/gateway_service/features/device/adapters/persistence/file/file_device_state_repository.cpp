@@ -11,13 +11,13 @@
 #include <system_error>
 #include <utility>
 
-namespace gateway::device::persistence {
+namespace gateway_service {
 namespace {
 
 std::atomic<unsigned long> temporary_file_sequence{0};
 
-std::optional<domain::DeviceId> ParseDeviceId(const std::string& value,
-                                              const std::string& field) {
+std::optional<DeviceId> ParseDeviceId(const std::string& value,
+                                      const std::string& field) {
   if (value == "none") {
     return std::nullopt;
   }
@@ -36,7 +36,7 @@ std::optional<domain::DeviceId> ParseDeviceId(const std::string& value,
   }
 
   try {
-    return domain::DeviceId(device_id);
+    return DeviceId(device_id);
   } catch (const std::invalid_argument&) {
     throw std::runtime_error("device_state_invalid_" + field);
   }
@@ -65,12 +65,12 @@ void SyncPath(const std::filesystem::path& path, int flags) {
 FileDeviceStateRepository::FileDeviceStateRepository(std::string path)
     : path_(std::move(path)) {}
 
-domain::DeviceState FileDeviceStateRepository::Load() {
+DeviceState FileDeviceStateRepository::Load() {
   const std::scoped_lock lock(mutex_);
   return LoadUnlocked();
 }
 
-domain::DeviceState FileDeviceStateRepository::LoadUnlocked() {
+DeviceState FileDeviceStateRepository::LoadUnlocked() {
   std::ifstream file(path_);
 
   if (!file) {
@@ -110,7 +110,7 @@ domain::DeviceState FileDeviceStateRepository::LoadUnlocked() {
   };
 }
 
-void FileDeviceStateRepository::Save(const domain::DeviceState& state) {
+void FileDeviceStateRepository::Save(const DeviceState& state) {
   const std::scoped_lock lock(mutex_);
   const std::filesystem::path destination(path_);
   const auto parent = destination.parent_path();
@@ -132,11 +132,10 @@ void FileDeviceStateRepository::Save(const domain::DeviceState& state) {
       throw std::runtime_error("device_state_open_failed");
     }
 
-    const auto format_device_id =
-        [](const std::optional<domain::DeviceId>& device_id) {
-          return device_id.has_value() ? std::to_string(device_id->Value())
-                                       : std::string("none");
-        };
+    const auto format_device_id = [](const std::optional<DeviceId>& device_id) {
+      return device_id.has_value() ? std::to_string(device_id->Value())
+                                   : std::string("none");
+    };
 
     file << "version=1\n"
          << "desired=" << format_device_id(state.desired) << "\n"
@@ -161,4 +160,4 @@ void FileDeviceStateRepository::Save(const domain::DeviceState& state) {
   }
 }
 
-}  // namespace gateway::device::persistence
+}  // namespace gateway_service

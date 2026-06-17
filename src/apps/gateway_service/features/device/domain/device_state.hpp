@@ -4,11 +4,11 @@
 
 #include "device_id.hpp"
 
-namespace gateway::device::domain {
+namespace gateway_service {
 
 struct DeviceState {
   std::optional<DeviceId> desired;
   std::optional<DeviceId> applied;
 };
 
-}  // namespace gateway::device::domain
+}  // namespace gateway_service

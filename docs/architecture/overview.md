@@ -33,6 +33,10 @@ Outer layers implement those ports:
 `bootstrap` is the composition root. It is the only place that should know
 about both use cases and concrete adapters.
 
+At the C++ symbol level, gateway-service-owned types share one namespace:
+`gateway_service`. The directory structure still represents layers and feature
+ownership, but those folders are not mirrored as nested C++ namespaces.
+
 ## Target Graph
 
 ```mermaid

@@ -5,21 +5,20 @@
 
 #include "device_state_repository.hpp"
 
-namespace gateway::device::persistence {
+namespace gateway_service {
 
-class FileDeviceStateRepository final
-    : public application::DeviceStateRepository {
+class FileDeviceStateRepository final : public DeviceStateRepository {
  public:
   explicit FileDeviceStateRepository(std::string path);
 
-  domain::DeviceState Load() override;
-  void Save(const domain::DeviceState& state) override;
+  DeviceState Load() override;
+  void Save(const DeviceState& state) override;
 
  private:
-  domain::DeviceState LoadUnlocked();
+  DeviceState LoadUnlocked();
 
   std::string path_;
   std::mutex mutex_;
 };
 
-}  // namespace gateway::device::persistence
+}  // namespace gateway_service

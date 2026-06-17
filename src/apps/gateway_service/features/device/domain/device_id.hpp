@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace gateway::device::domain {
+namespace gateway_service {
 
 class DeviceId {
  public:
@@ -22,4 +22,4 @@ inline bool operator==(const DeviceId& left, const DeviceId& right) {
   return left.Value() == right.Value();
 }
 
-}  // namespace gateway::device::domain
+}  // namespace gateway_service

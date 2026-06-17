@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-namespace gateway::device::adapter {
+namespace gateway_service {
 
-void ConsoleDeviceController::ApplyDevice(const domain::DeviceId& device_id) {
+void ConsoleDeviceController::ApplyDevice(const DeviceId& device_id) {
   std::cout << "device_apply: " << device_id.Value() << std::endl;
 }
 
-}  // namespace gateway::device::adapter
+}  // namespace gateway_service

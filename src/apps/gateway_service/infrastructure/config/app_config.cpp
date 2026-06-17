@@ -8,7 +8,7 @@
 
 #include "device_id.hpp"
 
-namespace gateway::infrastructure {
+namespace gateway_service {
 namespace {
 
 std::string ReadString(const char* name, std::string default_value) {
@@ -65,7 +65,7 @@ AppConfig AppConfig::Load() {
   const int reconcile_interval_milliseconds =
       ReadInteger("RECONCILE_INTERVAL_MS", 5000);
 
-  const device::domain::DeviceId validated_default_device_id{default_device_id};
+  const DeviceId validated_default_device_id{default_device_id};
   static_cast<void>(validated_default_device_id);
 
   if (reconcile_interval_milliseconds <= 0) {
@@ -86,4 +86,4 @@ int AppConfig::ReconcileIntervalMilliseconds() const {
   return reconcile_interval_milliseconds_;
 }
 
-}  // namespace gateway::infrastructure
+}  // namespace gateway_service

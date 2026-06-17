@@ -7,11 +7,11 @@
 
 namespace {
 
-using gateway::device::application::DeviceController;
-using gateway::device::application::DeviceStateRepository;
-using gateway::device::application::ReconcileDeviceUseCase;
-using gateway::device::domain::DeviceId;
-using gateway::device::domain::DeviceState;
+using gateway_service::DeviceController;
+using gateway_service::DeviceId;
+using gateway_service::DeviceState;
+using gateway_service::DeviceStateRepository;
+using gateway_service::ReconcileDeviceUseCase;
 
 class FakeRepository final : public DeviceStateRepository {
  public:

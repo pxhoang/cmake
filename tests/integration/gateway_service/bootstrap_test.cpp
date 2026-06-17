@@ -34,8 +34,8 @@ class BootstrapTest : public ::testing::Test {
 };
 
 TEST_F(BootstrapTest, WiresAdaptersAndInitializesDefaultDeviceId) {
-  const auto config = gateway::infrastructure::AppConfig::Load();
-  gateway::bootstrap::Bootstrap bootstrap;
+  const auto config = gateway_service::AppConfig::Load();
+  gateway_service::Bootstrap bootstrap;
 
   auto api = bootstrap.CreateDeviceApi(config);
 

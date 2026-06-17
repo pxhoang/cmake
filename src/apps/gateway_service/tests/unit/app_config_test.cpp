@@ -8,7 +8,7 @@
 
 namespace {
 
-using gateway::infrastructure::AppConfig;
+using gateway_service::AppConfig;
 
 class EnvironmentGuard {
  public:

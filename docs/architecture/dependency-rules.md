@@ -44,3 +44,8 @@ Ports live in `application`. Implementations live in `adapters/`, including
 persistence implementations under `adapters/persistence/`. Tests for
 application behavior should use fakes and should not link concrete adapter
 implementations.
+
+For `gateway_service`, these directory boundaries are architectural, not
+namespace boundaries. Public C++ types use the shared `gateway_service`
+namespace even when they live under `domain/`, `application/`, `api/`, or
+`adapters/`.

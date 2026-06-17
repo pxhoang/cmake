@@ -7,14 +7,14 @@
 
 namespace {
 
-using gateway::device::api::DeviceApi;
-using gateway::device::application::DeviceController;
-using gateway::device::application::DeviceStateRepository;
-using gateway::device::application::GetSelectedDeviceUseCase;
-using gateway::device::application::ReconcileDeviceUseCase;
-using gateway::device::application::SelectDeviceUseCase;
-using gateway::device::domain::DeviceId;
-using gateway::device::domain::DeviceState;
+using gateway_service::DeviceApi;
+using gateway_service::DeviceController;
+using gateway_service::DeviceId;
+using gateway_service::DeviceState;
+using gateway_service::DeviceStateRepository;
+using gateway_service::GetSelectedDeviceUseCase;
+using gateway_service::ReconcileDeviceUseCase;
+using gateway_service::SelectDeviceUseCase;
 
 class FakeRepository final : public DeviceStateRepository {
  public:

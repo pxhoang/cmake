@@ -8,25 +8,19 @@
 #include "reconcile_device_use_case.hpp"
 #include "select_device_use_case.hpp"
 
-namespace gateway::bootstrap {
+namespace gateway_service {
 
-device::api::DeviceApi Bootstrap::CreateDeviceApi(
-    const infrastructure::AppConfig& config) {
+DeviceApi Bootstrap::CreateDeviceApi(const AppConfig& config) {
   auto repository =
-      std::make_shared<device::persistence::FileDeviceStateRepository>(
-          config.DeviceStatePath());
-  auto controller =
-      std::make_shared<device::adapter::ConsoleDeviceController>();
+      std::make_shared<FileDeviceStateRepository>(config.DeviceStatePath());
+  auto controller = std::make_shared<ConsoleDeviceController>();
 
   auto select_device_use_case =
-      std::make_shared<device::application::SelectDeviceUseCase>(repository,
-                                                                 controller);
+      std::make_shared<SelectDeviceUseCase>(repository, controller);
   auto get_selected_device_use_case =
-      std::make_shared<device::application::GetSelectedDeviceUseCase>(
-          repository);
+      std::make_shared<GetSelectedDeviceUseCase>(repository);
   auto reconcile_device_use_case =
-      std::make_shared<device::application::ReconcileDeviceUseCase>(repository,
-                                                                    controller);
+      std::make_shared<ReconcileDeviceUseCase>(repository, controller);
 
   if (!repository->Load().desired.has_value()) {
     select_device_use_case->Execute(config.DefaultDeviceId());
@@ -34,9 +28,8 @@ device::api::DeviceApi Bootstrap::CreateDeviceApi(
     reconcile_device_use_case->Execute();
   }
 
-  return device::api::DeviceApi(select_device_use_case,
-                                get_selected_device_use_case,
-                                reconcile_device_use_case);
+  return DeviceApi(select_device_use_case, get_selected_device_use_case,
+                   reconcile_device_use_case);
 }
 
-}  // namespace gateway::bootstrap
+}  // namespace gateway_service

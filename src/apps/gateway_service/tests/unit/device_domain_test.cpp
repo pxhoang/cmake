@@ -4,7 +4,7 @@
 
 #include "device_id.hpp"
 
-using gateway::device::domain::DeviceId;
+using gateway_service::DeviceId;
 
 TEST(DeviceIdTest, StoresValidDeviceId) {
   const DeviceId device_id(15);

@@ -15,17 +15,17 @@ volatile std::sig_atomic_t stop_requested = 0;
 
 void RequestStop(int) { stop_requested = 1; }
 
-void PrintCurrentDevice(gateway::device::api::DeviceApi& api) {
+void PrintCurrentDevice(gateway_service::DeviceApi& api) {
   std::cout << api.GetSelectedDeviceMessage() << std::endl;
 }
 
-int RunOnce(gateway::device::api::DeviceApi& api) {
+int RunOnce(gateway_service::DeviceApi& api) {
   PrintCurrentDevice(api);
   return 0;
 }
 
-int Serve(gateway::device::api::DeviceApi& api,
-          const gateway::infrastructure::AppConfig& config) {
+int Serve(gateway_service::DeviceApi& api,
+          const gateway_service::AppConfig& config) {
   std::signal(SIGINT, RequestStop);
   std::signal(SIGTERM, RequestStop);
 
@@ -55,8 +55,8 @@ int main(int argc, char* argv[]) {
       throw std::runtime_error("usage: gateway_service [once|serve]");
     }
 
-    const auto config = gateway::infrastructure::AppConfig::Load();
-    gateway::bootstrap::Bootstrap bootstrap;
+    const auto config = gateway_service::AppConfig::Load();
+    gateway_service::Bootstrap bootstrap;
     auto api = bootstrap.CreateDeviceApi(config);
 
     if (command == "serve") {

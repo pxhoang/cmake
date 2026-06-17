@@ -2,11 +2,11 @@
 
 #include "device_controller.hpp"
 
-namespace gateway::device::adapter {
+namespace gateway_service {
 
-class ConsoleDeviceController final : public application::DeviceController {
+class ConsoleDeviceController final : public DeviceController {
  public:
-  void ApplyDevice(const domain::DeviceId& device_id) override;
+  void ApplyDevice(const DeviceId& device_id) override;
 };
 
-}  // namespace gateway::device::adapter
+}  // namespace gateway_service

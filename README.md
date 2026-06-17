@@ -130,6 +130,12 @@ Persistence is implemented as an adapter. The application layer owns the
 repository port; `adapters/persistence/file` provides the file-backed
 implementation.
 
+Gateway-service C++ types now share one application namespace:
+`gateway_service`. Folder boundaries still express architectural layers, but
+the service no longer mirrors those directories in nested C++ namespaces.
+Examples include `gateway_service::AppConfig`,
+`gateway_service::Bootstrap`, and `gateway_service::FileDeviceStateRepository`.
+
 The repository stores desired and applied device state separately. Failed
 device operations leave desired state pending for the daemon to reconcile.
 

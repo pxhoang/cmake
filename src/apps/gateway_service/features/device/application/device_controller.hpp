@@ -2,13 +2,13 @@
 
 #include "device_id.hpp"
 
-namespace gateway::device::application {
+namespace gateway_service {
 
 class DeviceController {
  public:
   virtual ~DeviceController() = default;
 
-  virtual void ApplyDevice(const domain::DeviceId& device_id) = 0;
+  virtual void ApplyDevice(const DeviceId& device_id) = 0;
 };
 
-}  // namespace gateway::device::application
+}  // namespace gateway_service

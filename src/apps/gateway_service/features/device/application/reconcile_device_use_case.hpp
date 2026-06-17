@@ -6,7 +6,7 @@
 #include "device_controller.hpp"
 #include "device_state_repository.hpp"
 
-namespace gateway::device::application {
+namespace gateway_service {
 
 class ReconcileDeviceUseCase {
  public:
@@ -33,4 +33,4 @@ class ReconcileDeviceUseCase {
   std::shared_ptr<DeviceController> controller_;
 };
 
-}  // namespace gateway::device::application
+}  // namespace gateway_service
