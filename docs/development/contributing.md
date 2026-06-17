@@ -13,6 +13,8 @@ placement, and repository layout.
 5. Update docs, ops, tooling, and CI only when the change affects them.
 6. Run the narrowest relevant verification command, and run the full test
    command for shared architecture or cross-component behavior.
+7. For C++/Linux systems changes, document memory ownership, resource
+   lifetime, thread safety, diagnostics, and platform risks.
 
 ## Definition of Done
 
@@ -23,5 +25,7 @@ A change is done only when:
 3. Generated output remains under `.img/`.
 4. Documentation and operations assets match actual behavior.
 5. Verification results and residual risk are reported.
+6. Memory, resource, concurrency, security, and Linux runtime risks are handled
+   or explicitly reported.
 
 Temporary architecture violations are not allowed.

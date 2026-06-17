@@ -1,15 +1,13 @@
 <!--
 Sync Impact Report
-Version change: 1.4.1 -> 1.5.0
+Version change: 1.5.0 -> 1.6.0
 Modified principles:
-- Scope: clarified that architecture model changes require constitutional
-  amendment.
-- Required Checks: added explicit PASS/FAIL/N/A evidence requirements.
-- Normative References: removed example documents from binding references.
+- Non-Negotiable Gates: added C++ memory, resource lifetime, thread safety,
+  Linux runtime, diagnostics, performance, dependency, and review quality gate.
+- Required Checks: added C++/Linux systems quality check item.
+- Normative References: added C++/Linux systems engineering guides.
 Added sections: None
-Removed sections:
-- Spec Kit examples and validation from Normative References
-- Informative Examples
+Removed sections: None
 Templates requiring updates:
 - Pending: .specify/memory/constitution.md, replace with this constitution.
 - Pending: .specify/templates/spec-template.md, require scope, architecture,
@@ -67,6 +65,9 @@ gates:
 12. Documentation is separated by purpose and updated with behavior changes.
 13. Security-sensitive material is never committed; external input and new
     communication surfaces receive explicit security review.
+14. C++ memory, resource lifetime, thread safety, Linux runtime behavior,
+    diagnostics, performance, dependency risk, and code review quality are
+    explicitly safe for the change.
 
 Any failed gate blocks implementation until the design is revised or this
 constitution is amended.
@@ -96,6 +97,7 @@ Every plan MUST include a Constitution Check with PASS, FAIL, or N/A for:
 11. Build, tooling, and packaging.
 12. Documentation separation.
 13. Security rules.
+14. C++ / Linux systems quality.
 
 Each Constitution Check item MUST include evidence. `PASS` requires the
 specific file, target, dependency, test, or design decision that satisfies the
@@ -137,12 +139,22 @@ Development:
 3. `docs/development/build-tooling-packaging.md`
 4. `docs/development/local-development.md`
 5. `docs/development/contributing.md`
+6. `docs/development/memory-and-ownership.md`
+7. `docs/development/resource-lifetime.md`
+8. `docs/development/thread-safety.md`
+9. `docs/development/static-analysis.md`
+10. `docs/development/linux-platform.md`
+11. `docs/development/debugging-diagnostics.md`
+12. `docs/development/performance.md`
+13. `docs/development/dependency-management.md`
+14. `docs/development/code-review-checklist.md`
 
 Operations:
 
 1. `docs/operations/deployment.md`
 2. `docs/operations/runtime-configuration.md`
 3. `docs/operations/service-operations.md`
+4. `docs/operations/runtime-hardening.md`
 
 If a guide conflicts with this constitution, this constitution wins. If two
 guides conflict, stop and request clarification or an amendment.
@@ -163,4 +175,4 @@ version bump.
 Every plan and implementation review MUST check compliance with this
 constitution. Non-compliant work MUST be revised before it is considered done.
 
-**Version**: 1.5.0 | **Ratified**: 2026-06-17 | **Last Amended**: 2026-06-18
+**Version**: 1.6.0 | **Ratified**: 2026-06-17 | **Last Amended**: 2026-06-18
