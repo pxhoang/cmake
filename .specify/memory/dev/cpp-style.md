@@ -30,7 +30,8 @@ explicitly stated project constraint.
     application layer.
 13. Boundary failures MUST be explicit and testable.
 14. Unexpected failures MUST NOT be converted into default success values.
-15. Comments SHOULD explain non-obvious decisions or constraints.
+15. Each application MUST use one shared application namespace for public application-owned C++ types. Do not mirror directory layers as nested namespaces.
+16. Comments SHOULD explain non-obvious decisions or constraints.
 
 Project-owned wrappers around generated or third-party code MUST follow this
 memory even when upstream code keeps its original style.

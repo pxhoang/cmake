@@ -11,6 +11,12 @@ tests/integration/<app>/         Cross-component integration tests
 tests/e2e/<app>/                 End-to-end executable or deployed-flow tests
 ```
 
+Every application MUST have all three test layers:
+
+1. Unit tests (in `src/apps/<app>/tests/unit/`)
+2. Integration tests (in `tests/integration/<app>/`)
+3. End-to-end tests (in `tests/e2e/<app>/`)
+
 ## Layer Rules
 
 1. Domain tests cover pure business rules and value invariants.
