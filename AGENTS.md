@@ -1,14 +1,17 @@
 # Agent Instructions
 
-## Constitutional Docs
+## Constitutional Memory
 
-Agents MUST read `docs/README.md` and `docs/speckit/constitution.md` before
-changing project-owned code, docs, tooling, CI, packaging, or operations assets.
+Agents MUST read `.specify/memory/constitution.md` before changing
+project-owned code, docs, tooling, CI, packaging, or operations assets.
 
-`MUST`, `MUST NOT`, `forbidden`, and `required` rules in those documents and
-their normative references are non-negotiable gates. Agents MUST stop and ask
-for an explicit amendment when a requested change would violate one of those
-rules.
+Agents MUST also read the affected supporting memory file under
+`.specify/memory/` when changing architecture, development workflow,
+operations, or Spec Kit artifacts.
+
+`MUST`, `MUST NOT`, `forbidden`, and `required` rules in memory files are
+non-negotiable gates. Agents MUST stop and ask for an explicit amendment when a
+requested change would violate one of those rules.
 
 ## C++ Style
 
