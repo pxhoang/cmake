@@ -1,12 +1,14 @@
 # Architecture: API, IPC, and Handlers
 
-The default application API is an in-process C++ function-call API. API code is
-an input adapter. It translates caller input into application service calls
-and translates service output into caller-facing responses.
+When a feature exposes an application API, the default application API is an
+in-process C++ function-call API. API code is an input adapter. It translates
+caller input into application service calls and translates service output into
+caller-facing responses.
 
 ## Rules
 
-API, IPC, CLI, plugin, background handler, and service handler code MUST:
+When introduced, API, IPC, CLI, plugin, background handler, and service handler
+code MUST:
 
 1. Depend on application services, not concrete adapters.
 2. Keep protocol parsing and formatting outside domain and application logic.
@@ -16,7 +18,7 @@ API, IPC, CLI, plugin, background handler, and service handler code MUST:
 5. Return explicit success or failure information.
 
 New TCP, HTTP, RPC, message bus, CLI command router, plugin, or background
-handler surfaces MUST be introduced as adapters with:
+handler surfaces MUST be introduced as concrete boundary mechanisms with:
 
 1. Explicit ports.
 2. Tests.

@@ -1,30 +1,17 @@
 <!--
 Sync Impact Report
-Version change: 1.7.0 -> 2.0.0
+Version change: 2.0.0 -> 2.0.1
 Modified principles:
-- Made `.specify/memory/` the self-contained constitutional authority.
-- Grouped architecture, development, and operations rules into focused memory
-  folders and files.
-- Removed non-memory authority dependencies for constitutional gates.
+- Feature-Oriented Clean Architecture: clarified that `api` and concrete
+  `adapters/` mechanisms are required only when affected by the feature.
 Added sections:
-- Core Principles
-- Non-Negotiable Gates
-- Required Spec Kit Checks
-- Memory Map
+- None.
 Removed sections:
-- External normative references.
+- None.
 Templates requiring updates:
-- Pending: `.specify/templates/spec-template.md`, add required specification
-  impact fields from this constitution.
-- Pending: `.specify/templates/plan-template.md`, replace the generic
-  Constitution Check placeholder with the required gate checklist.
-- Pending: `.specify/templates/tasks-template.md`, enforce constitutional task
-  ordering and exact file paths.
-- Pending: `.specify/templates/checklist-template.md`, require memory-derived
-  checks and non-negotiable gate handling.
+- None for this amendment.
 Follow-up TODOs:
-- Align `.specify/templates/` with this memory set before generating new
-  feature artifacts.
+- None.
 -->
 
 # Project Constitution
@@ -62,16 +49,18 @@ Rules in `.specify/memory/` are binding project memory:
 ### I. Feature-Oriented Clean Architecture
 
 Feature code MUST live inside the owning feature slice. Business rules belong
-in `domain` and `application/services`. External mechanisms belong in `api`,
-`adapters`, app-level infrastructure, or `bootstrap`.
+in `domain` and `application/services`. External mechanisms, when present,
+belong in optional `api`, concrete `adapters/` mechanisms, app-level
+infrastructure, or `bootstrap`.
 
 Concrete implementations MUST be wired only at composition boundaries.
 
 ### II. Dependency Direction and CMake Boundaries
 
 Dependencies MUST point inward. Inner layers own policy; outer layers own
-mechanisms. Every layer MUST have a narrow CMake target that exposes only the
-include directories and dependencies required by its contract.
+mechanisms. Every affected layer and concrete mechanism MUST have a narrow
+CMake target that exposes only the include directories and dependencies
+required by its contract.
 
 Targets, include paths, and tests MUST enforce the same architecture graph.
 Broad include paths, parent-relative includes across architecture boundaries,
@@ -110,13 +99,14 @@ MUST satisfy these gates:
 1. Product scope stays within the approved Clean C++ service model. Scope
    expansion requires explicit specification; architecture model changes
    require constitutional amendment.
-2. Feature code follows feature-owned Clean Architecture:
-   `domain`, `application/ports`, `application/services`, `api`, `adapters`,
-   and `bootstrap`.
+2. Feature code follows feature-owned Clean Architecture: `domain`,
+   `application/ports`, `application/services`, optional `api`, optional
+   concrete `adapters/` mechanisms, and `bootstrap` when affected by the
+   feature.
 3. Source, tests, ops, tooling, CI, root files, dot-directories, `.specify/`,
    and generated output are placed in approved repository areas.
-4. Every layer has a narrow CMake target boundary with only direct required
-   dependencies.
+4. Every affected layer and concrete mechanism has a narrow CMake target
+   boundary with only direct required dependencies.
 5. Dependencies point inward; inner layers never depend on concrete adapters,
    infrastructure, IPC frameworks, vendor SDKs, persistence implementations,
    or runtime mechanisms.
@@ -243,4 +233,4 @@ require a PATCH version bump.
 Every plan and implementation review MUST check compliance with this
 constitution. Non-compliant work MUST be revised before it is considered done.
 
-**Version**: 2.0.0 | **Ratified**: 2026-06-17 | **Last Amended**: 2026-06-18
+**Version**: 2.0.1 | **Ratified**: 2026-06-17 | **Last Amended**: 2026-06-19

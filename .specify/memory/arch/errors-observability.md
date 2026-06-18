@@ -27,8 +27,8 @@ configuration parsing, and external communication surfaces.
 1. User-facing command output and service logs MUST describe meaningful state
    transitions and failures.
 2. Domain logic MUST NOT write to stdout, stderr, logs, files, or metrics.
-3. Observability mechanisms belong in API, adapters, bootstrap, or app-level
-   infrastructure.
+3. Observability mechanisms belong at affected boundaries such as optional
+   API, concrete adapters, bootstrap, or app-level infrastructure.
 4. Logs and diagnostics MUST preserve debugging context without exposing
    secrets.
 5. Tests that depend on output MUST assert stable behavior, not incidental

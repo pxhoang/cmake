@@ -25,8 +25,8 @@ Architecture work MUST satisfy:
 1. Product source, tests, tooling, ops assets, memory, and generated output
    are in approved repository areas.
 2. Feature code is contained in the owning feature slice.
-3. `domain`, `application/ports`, `application/services`, `api`, `adapters`,
-   and `bootstrap` keep their responsibilities.
+3. `domain`, `application/ports`, `application/services`, optional `api`,
+   optional `adapters`, and `bootstrap` keep their responsibilities.
 4. Dependencies point inward.
 5. CMake targets enforce architecture boundaries.
 6. API, IPC, CLI, plugin, and handler surfaces are input adapters.

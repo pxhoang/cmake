@@ -6,8 +6,8 @@ External mechanisms live in outer layers.
 
 ## Required Feature Shape
 
-Every feature inside an executable application MUST use this shape unless the
-constitution is amended:
+Every feature inside an executable application MUST use this inner-layer shape
+unless the constitution is amended:
 
 ```text
 src/apps/<app>/features/<feature>/
@@ -15,19 +15,25 @@ src/apps/<app>/features/<feature>/
 |-- application/
 |   |-- ports/
 |   `-- services/
-|-- api/
-`-- adapters/
-    |-- console/
-    `-- persistence/
+|-- api/                 # when the feature exposes an in-process API boundary
+`-- adapters/            # when the feature introduces concrete mechanisms
+    `-- <mechanism>/     # only the mechanisms required by the feature
 ```
+
+Adapter subdirectories MUST be mechanism-driven. A feature MUST NOT add any
+concrete adapter directory unless the feature explicitly introduces that
+mechanism.
+
+When persistence is required, concrete persistence implementations MUST live
+under `adapters/persistence/` as specified by `persistence-config.md`.
 
 ## Layer Responsibilities
 
 1. `domain`: pure business types, invariants, and rules.
 2. `application/ports`: application-owned contracts for side effects.
 3. `application/services`: workflow policy and application services.
-4. `api`: in-process input adapters for callers.
-5. `adapters`: external mechanisms and side effects.
+4. `api`: in-process input adapters for callers when the feature exposes one.
+5. `adapters`: external mechanisms and side effects when required.
 6. `bootstrap`: composition root that wires concrete implementations.
 
 ## Required Rules
@@ -54,4 +60,4 @@ Plans and reviews that add or change feature code MUST state:
 3. Affected layers.
 4. Public application namespace.
 5. Composition root or bootstrap location.
-6. Why any missing standard layer is not affected.
+6. Why any optional API or adapter mechanism is present or absent.

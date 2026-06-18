@@ -5,11 +5,14 @@ mechanisms.
 
 ## Allowed Dependencies
 
+These direct dependencies are allowed only when the corresponding layer or
+mechanism exists for the feature:
+
 ```text
 api -> application/services
 application/services -> application/ports
 application/ports -> domain
-adapters -> application/ports
+adapters/<mechanism> -> application/ports
 adapters/persistence -> application/ports
 bootstrap -> concrete outer layers
 ```
@@ -40,8 +43,10 @@ The composition target is the only target allowed to depend on concrete
 adapters, including persistence implementations.
 
 Ports live in `application/ports`. Application services live in
-`application/services`. Implementations live in `adapters/`, including
-persistence implementations under `adapters/persistence/`.
+`application/services`. Concrete mechanism implementations live in
+mechanism-specific `adapters/` directories when the feature introduces those
+mechanisms. Persistence implementations live under `adapters/persistence/`
+when persistence is required.
 
 Application behavior tests MUST use fakes for ports and MUST NOT link concrete
 adapter implementations.

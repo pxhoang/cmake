@@ -16,8 +16,9 @@ plan when loops, waits, worker threads, or blocking I/O are introduced.
    process, socket, and environment dependencies.
 2. Application services MUST NOT create detached threads or unbounded
    background work.
-3. Blocking I/O belongs in adapters or app-level infrastructure and MUST have
-   bounded behavior and a documented shutdown path.
+3. Blocking I/O belongs in concrete adapters when those mechanisms exist, or
+   in app-level infrastructure, and MUST have bounded behavior and a documented
+   shutdown path.
 4. Shared mutable state MUST be protected by clear ownership, synchronization,
    or confinement.
 5. Retry, polling, and reconciliation loops MUST have explicit stop conditions

@@ -1,12 +1,13 @@
 # Architecture: CMake Targets
 
-CMake targets are architecture boundaries. Every layer MUST be represented by a
-narrow target that exposes only the include directories and dependencies
-required by that layer contract.
+CMake targets are architecture boundaries. Every affected layer and concrete
+mechanism MUST be represented by a narrow target that exposes only the include
+directories and dependencies required by that layer or mechanism contract.
 
 ## Target Naming
 
-For an app prefix named `<app_prefix>`, feature targets MUST follow this style:
+For an app prefix named `<app_prefix>`, feature targets MUST follow this style
+when the corresponding layer or mechanism exists:
 
 ```text
 <app_prefix>_<feature>_domain
