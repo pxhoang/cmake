@@ -3,18 +3,13 @@
 #include <memory>
 #include <string>
 
-#include "get_selected_device_use_case.hpp"
-#include "reconcile_device_use_case.hpp"
-#include "select_device_use_case.hpp"
+#include "device_service.hpp"
 
 namespace gateway_service {
 
 class DeviceApi {
  public:
-  DeviceApi(
-      std::shared_ptr<SelectDeviceUseCase> select_device_use_case,
-      std::shared_ptr<GetSelectedDeviceUseCase> get_selected_device_use_case,
-      std::shared_ptr<ReconcileDeviceUseCase> reconcile_device_use_case);
+  explicit DeviceApi(std::shared_ptr<DeviceService> device_service);
 
   void SelectDevice(int device_id);
   int GetSelectedDevice();
@@ -22,9 +17,7 @@ class DeviceApi {
   bool ReconcileDevice();
 
  private:
-  std::shared_ptr<SelectDeviceUseCase> select_device_use_case_;
-  std::shared_ptr<GetSelectedDeviceUseCase> get_selected_device_use_case_;
-  std::shared_ptr<ReconcileDeviceUseCase> reconcile_device_use_case_;
+  std::shared_ptr<DeviceService> device_service_;
 };
 
 }  // namespace gateway_service

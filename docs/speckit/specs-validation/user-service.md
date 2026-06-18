@@ -37,7 +37,8 @@ Feature: identity
 Layers: domain, application, api, adapters, bootstrap
 CMake targets:
 - user_identity_domain
-- user_identity_application
+- user_identity_ports
+- user_identity_services
 - user_identity_api
 - user_identity_file_persistence
 - user_config
@@ -81,10 +82,10 @@ Domain types:
 2. `UserName`
 3. `UserProfile`
 
-Application use cases:
+Application services:
 
-1. `RegisterUserUseCase`
-2. `GetUserProfileUseCase`
+1. `RegisterUserService`
+2. `GetUserProfileService`
 
 Application ports:
 
@@ -111,18 +112,25 @@ user_service
 `-- user_composition
     |-- user_config
     |-- user_identity_api
-    |   `-- user_identity_application
-    |       `-- user_identity_domain
+    |   `-- user_identity_services
+    |       `-- user_identity_ports
+    |           `-- user_identity_domain
     `-- user_identity_file_persistence
-        `-- user_identity_application
+        `-- user_identity_ports
+            `-- user_identity_domain
 ```
 
 Forbidden dependencies:
 
 ```text
+user_identity_domain -> user_identity_ports
+user_identity_domain -> user_identity_services
 user_identity_domain -> user_identity_api
 user_identity_domain -> user_identity_file_persistence
-user_identity_application -> user_identity_file_persistence
+user_identity_ports -> user_identity_services
+user_identity_ports -> user_identity_api
+user_identity_ports -> user_identity_file_persistence
+user_identity_services -> user_identity_file_persistence
 user_identity_api -> user_identity_file_persistence
 user_identity_api -> user_config
 ```
@@ -168,7 +176,7 @@ process.
 
 ### Testability Impact
 
-Unit tests cover domain, application use cases, API translation, and config
+Unit tests cover domain, application services, API translation, and config
 parsing. Application tests use fake repositories. API tests do not link
 concrete persistence.
 
@@ -201,8 +209,8 @@ src/apps/user_service/
 |       |   `-- user_profile.hpp
 |       |-- application/
 |       |   |-- CMakeLists.txt
-|       |   |-- get_user_profile_use_case.hpp
-|       |   |-- register_user_use_case.hpp
+|       |   |-- get_user_profile_service.hpp
+|       |   |-- register_user_service.hpp
 |       |   `-- user_repository.hpp
 |       |-- api/
 |       |   |-- CMakeLists.txt
@@ -219,8 +227,8 @@ src/apps/user_service/
 `-- tests/
     `-- unit/
         |-- app_config_test.cpp
-        |-- get_user_profile_use_case_test.cpp
-        |-- register_user_use_case_test.cpp
+        |-- get_user_profile_service_test.cpp
+        |-- register_user_service_test.cpp
         |-- user_api_test.cpp
         `-- user_domain_test.cpp
 ```
@@ -254,7 +262,7 @@ ops/deploy/package/user_service/
 | Product scope | PASS | New executable `user_service` remains a Clean C++ service with in-process API only. |
 | Architecture principles | PASS | Feature code is under `src/apps/user_service/features/identity/` with `domain`, `application`, `api`, `adapters`, and `bootstrap`. |
 | Source layout and layering | PASS | Product source, unit tests, integration tests, e2e tests, ops assets, and docs are placed in approved repository areas listed above. |
-| CMake target boundaries | PASS | Proposed targets are `user_identity_domain`, `user_identity_application`, `user_identity_api`, `user_identity_file_persistence`, `user_config`, `user_composition`, and `user_service`. |
+| CMake target boundaries | PASS | Proposed targets are `user_identity_domain`, `user_identity_ports`, `user_identity_services`, `user_identity_api`, `user_identity_file_persistence`, `user_config`, `user_composition`, and `user_service`. |
 | Dependency rules | PASS | Target graph points inward; concrete persistence is linked only by `user_composition`. |
 | API / IPC / handler rules | PASS | `UserApi` is an input adapter and does not include or link `FileUserRepository`; no external IPC is introduced. |
 | Responsiveness and concurrency | PASS | No worker, detached thread, polling loop, or blocking service loop is introduced; file I/O stays in the adapter. |
@@ -273,12 +281,12 @@ Tasks are ordered so enforcement comes before implementation.
 
 ```text
 1. Add `src/apps/user_service/` CMake skeleton and layer targets.
-2. Add failing unit tests for domain values, use cases, API translation, and
+2. Add failing unit tests for domain values, services, API translation, and
    config parsing.
 3. Add failing integration tests for file persistence and bootstrap wiring.
 4. Add failing e2e executable-flow test.
 5. Implement `identity/domain` value types.
-6. Implement `identity/application` ports and use cases.
+6. Implement `identity/application` ports and services.
 7. Implement `identity/api` input adapter.
 8. Implement `identity/adapters/persistence/file` repository.
 9. Implement app config loader under `infrastructure/config`.
@@ -294,7 +302,7 @@ The following agent output must be rejected:
 ```text
 Implement user registration directly in src/apps/user_service/main.cpp.
 Read and write users directly from UserApi.
-Add HTTP handlers in application/use cases for convenience.
+Add HTTP handlers in application/services for convenience.
 Skip CMake targets until the feature works.
 Store temporary user database files under tests/tmp/.
 Commit a config file with a real token.

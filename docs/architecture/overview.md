@@ -19,7 +19,9 @@ concrete example of the required architecture:
 ```text
 src/apps/gateway_service/features/device/
 |-- domain/          # Pure business types and rules
-|-- application/     # Use cases and ports
+|-- application/     # Ports and services
+|   |-- ports/
+|   `-- services/
 |-- api/             # In-process input adapter used by the service
 `-- adapters/        # External side-effect adapters
     |-- console/
@@ -38,7 +40,7 @@ Outer layers implement those ports:
 - `adapters/console/ConsoleDeviceController`
 
 `bootstrap` is the composition root. It is the only place that should know
-about both use cases and concrete adapters.
+about both services and concrete adapters.
 
 At the C++ symbol level, gateway-service-owned types share one namespace:
 `gateway_service`. The directory structure still represents layers and feature
@@ -51,12 +53,15 @@ gateway_service
 `-- gateway_composition
     |-- gateway_config
     |-- gateway_device_api
-    |   `-- gateway_device_application
-    |       `-- gateway_device_domain
+    |   `-- gateway_device_services
+    |       `-- gateway_device_ports
+    |           `-- gateway_device_domain
     |-- gateway_device_file_persistence
-    |   `-- gateway_device_application
+    |   `-- gateway_device_ports
+    |       `-- gateway_device_domain
     `-- gateway_device_console_adapter
-        `-- gateway_device_application
+        `-- gateway_device_ports
+            `-- gateway_device_domain
 ```
 
 The API is currently an in-process C++ function-call API. The executable has:
@@ -69,9 +74,10 @@ The API is currently an in-process C++ function-call API. The executable has:
 | Layer | Responsibility | May depend on |
 |-------|----------------|---------------|
 | `domain` | Business types and invariants | Nothing project-specific |
-| `application` | Use cases and ports | `domain` |
-| `api` | Input adapter for callers inside the process | `application` |
-| `adapters` | External mechanisms, including persistence | `application` ports |
+| `application/ports` | Application-owned side-effect contracts | `domain` |
+| `application/services` | Workflow policy and application services | `application/ports` |
+| `api` | Input adapter for callers inside the process | `application/services` |
+| `adapters` | External mechanisms, including persistence | `application/ports` |
 | `bootstrap` | Object graph composition | Concrete outer layers |
 
 Persistence code belongs under `adapters/persistence/`. The application layer

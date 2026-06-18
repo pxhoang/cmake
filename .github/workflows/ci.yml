@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Architecture boundary check
+        run: ./tooling/scripts/check-architecture.sh
+
       - name: Build and test
         run: ./tooling/scripts/docker-test.sh
 

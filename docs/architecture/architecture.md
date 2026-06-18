@@ -11,6 +11,8 @@ direction.
 src/apps/<app>/features/<feature>/
 |-- domain/
 |-- application/
+|   |-- ports/
+|   `-- services/
 |-- api/
 `-- adapters/
     |-- console/
@@ -20,10 +22,11 @@ src/apps/<app>/features/<feature>/
 Layer responsibilities:
 
 1. `domain`: pure business types, invariants, and rules.
-2. `application`: use cases and ports.
-3. `api`: in-process input adapters for callers.
-4. `adapters`: external mechanisms and side effects.
-5. `bootstrap`: composition root that wires concrete implementations.
+2. `application/ports`: application-owned contracts for side effects.
+3. `application/services`: workflow policy and application services.
+4. `api`: in-process input adapters for callers.
+5. `adapters`: external mechanisms and side effects.
+6. `bootstrap`: composition root that wires concrete implementations.
 
 ## Required Rules
 

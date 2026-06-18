@@ -18,7 +18,7 @@ grep -F "device_apply: 1" <<<"${output}"
 grep -F "Current device: 1" <<<"${output}"
 
 rm -f "${state_path}"
-RECONCILE_INTERVAL_MS=50 "${executable}" serve >"${output_path}" 2>&1 &
+RECONCILE_INTERVAL_MS=60000 "${executable}" serve >"${output_path}" 2>&1 &
 service_pid=$!
 
 cleanup() {
@@ -39,5 +39,6 @@ done
 
 grep -F "Current device: 1" "${output_path}"
 kill -TERM "${service_pid}"
+timeout 2s tail --pid="${service_pid}" -f /dev/null
 wait "${service_pid}"
 trap - EXIT

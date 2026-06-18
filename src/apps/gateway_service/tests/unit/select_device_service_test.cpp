@@ -1,4 +1,4 @@
-#include "select_device_use_case.hpp"
+#include "select_device_service.hpp"
 
 #include <gtest/gtest.h>
 
@@ -11,7 +11,7 @@ using gateway_service::DeviceController;
 using gateway_service::DeviceId;
 using gateway_service::DeviceState;
 using gateway_service::DeviceStateRepository;
-using gateway_service::SelectDeviceUseCase;
+using gateway_service::SelectDeviceService;
 
 class FakeRepository final : public DeviceStateRepository {
  public:
@@ -36,12 +36,12 @@ class FakeController final : public DeviceController {
   std::optional<DeviceId> applied_device_id;
 };
 
-TEST(SelectDeviceUseCaseTest, PersistsDesiredAndAppliedDevice) {
+TEST(SelectDeviceServiceTest, PersistsDesiredAndAppliedDevice) {
   auto repository = std::make_shared<FakeRepository>();
   auto controller = std::make_shared<FakeController>();
-  SelectDeviceUseCase useCase(repository, controller);
+  SelectDeviceService service(repository, controller);
 
-  useCase.Execute(15);
+  service.Execute(15);
 
   ASSERT_TRUE(repository->state.desired.has_value());
   EXPECT_EQ(repository->state.desired->Value(), 15);
@@ -51,13 +51,13 @@ TEST(SelectDeviceUseCaseTest, PersistsDesiredAndAppliedDevice) {
   EXPECT_EQ(controller->applied_device_id->Value(), 15);
 }
 
-TEST(SelectDeviceUseCaseTest, PreservesDesiredStateWhenDeviceApplyFails) {
+TEST(SelectDeviceServiceTest, PreservesDesiredStateWhenDeviceApplyFails) {
   auto repository = std::make_shared<FakeRepository>();
   auto controller = std::make_shared<FakeController>();
   controller->fail = true;
-  SelectDeviceUseCase useCase(repository, controller);
+  SelectDeviceService service(repository, controller);
 
-  EXPECT_THROW(useCase.Execute(20), std::runtime_error);
+  EXPECT_THROW(service.Execute(20), std::runtime_error);
 
   ASSERT_TRUE(repository->state.desired.has_value());
   EXPECT_EQ(repository->state.desired->Value(), 20);

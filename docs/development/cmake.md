@@ -3,7 +3,35 @@
 The build uses target-based CMake with one declarative helper call per target.
 Each component owns its sources, includes, dependencies, and tests.
 
-## Architecture
+## Ownership
+
+This guide owns project CMake usage, target declaration, CMake test
+registration, presets, and build workflows. Architecture-level target boundary
+rules live in `docs/architecture/cmake-target-boundaries.md`; dependency
+direction rules live in `docs/architecture/dependency-rules.md`.
+
+## Must
+
+1. Put one `CMakeLists.txt` beside each independently buildable component.
+2. Keep directory-index files limited to `add_subdirectory()`.
+3. Declare every source explicitly; do not use `file(GLOB)`.
+4. Link only direct dependencies.
+5. Use `PUBLIC` dependencies only when exposed by public headers.
+6. Keep executable `main.cpp` thin and move behavior into testable libraries.
+7. Link concrete adapters, including persistence, only from a composition
+   target.
+8. Add a unit test with every behavior change.
+
+## Should
+
+1. Use one test executable for a cohesive test subject.
+2. Prefer focused test executables during TDD because CMake rebuilds and runs
+   less code.
+3. Prefer existing project helper functions over raw CMake target setup.
+
+## Workflow
+
+### CMake Model
 
 ```text
 Root CMakeLists.txt
@@ -21,18 +49,7 @@ Root CMakeLists.txt
 | `tooling/cmake/dependencies/` | Third-party dependency declarations |
 | `CMakePresets.json` | Reproducible developer and CI workflows |
 
-## Ownership Rules
-
-- Put one `CMakeLists.txt` beside each independently buildable component.
-- Keep directory-index files limited to `add_subdirectory()`.
-- Declare every source explicitly; do not use `file(GLOB)`.
-- Link only direct dependencies.
-- Use `PUBLIC` dependencies only when exposed by public headers.
-- Keep executable `main.cpp` thin and move behavior into testable libraries.
-- Link concrete adapters, including persistence, only from a composition target.
-- Add a unit test with every behavior change.
-
-## Add A Library
+### Add A Library
 
 Create `src/libs/example/CMakeLists.txt`:
 
@@ -40,8 +57,6 @@ Create `src/libs/example/CMakeLists.txt`:
 project_add_library(example
     SOURCES
         src/example.cpp
-    PUBLIC_DEPENDENCIES
-        project::common
 )
 
 if(BUILD_TESTING)
@@ -70,13 +85,10 @@ project::example
 Use an interface library for header-only code:
 
 ```cmake
-project_add_interface_library(example_contract
-    DEPENDENCIES
-        project::common
-)
+project_add_interface_library(example_contract)
 ```
 
-## Add A Binary
+### Add A Binary
 
 Keep runtime behavior in libraries and use the executable only as the entry
 point:
@@ -107,7 +119,7 @@ add_subdirectory(example_service)
 
 `INSTALL` installs the executable to `${CMAKE_INSTALL_BINDIR}`.
 
-## Add A Feature
+### Add A Feature
 
 Use the standard feature layout:
 
@@ -116,6 +128,8 @@ features/example/
 |-- CMakeLists.txt
 |-- domain/
 |-- application/
+|   |-- ports/
+|   `-- services/
 |-- api/
 `-- adapters/
     |-- console/
@@ -142,6 +156,13 @@ Keep CMake target boundaries and C++ namespace boundaries separate. Features
 use `domain/`, `application/`, `api/`, and `adapters/` directories and targets,
 but exported C++ symbols live in the application's shared namespace.
 
+The application directory wires its narrower contracts:
+
+```cmake
+add_subdirectory(ports)
+add_subdirectory(services)
+```
+
 Use interface targets for pure header-only layers:
 
 ```cmake
@@ -150,11 +171,18 @@ project_add_interface_library(example_feature_domain
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-project_add_interface_library(example_feature_application
+project_add_interface_library(example_feature_ports
     INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDENCIES
         project::example_feature_domain
+)
+
+project_add_interface_library(example_feature_services
+    INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDENCIES
+        project::example_feature_ports
 )
 ```
 
@@ -167,7 +195,7 @@ project_add_library(example_feature_file_persistence
     PUBLIC_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC_DEPENDENCIES
-        project::example_feature_application
+        project::example_feature_ports
 )
 ```
 
@@ -181,7 +209,7 @@ target_link_libraries(example_composition
 )
 ```
 
-## Add Tests
+### Add Tests
 
 Use one test executable for a cohesive test subject. Prefer focused test
 executables during TDD because CMake rebuilds and runs less code.
@@ -225,7 +253,7 @@ project_add_e2e_test(example_service_e2e
 
 CTest labels are assigned automatically: `unit`, `integration`, and `e2e`.
 
-## TDD Workflow
+### TDD Workflow
 
 ```bash
 ./tooling/scripts/test.sh tdd
@@ -256,7 +284,7 @@ Run the complete suite with sanitizers and warnings as errors:
 ./tooling/scripts/test.sh sanitize
 ```
 
-## Presets
+### Presets
 
 Presets use the Unix Makefiles generator. Local builds require CMake, Make, and
 a C++ compiler; Docker builds provide those tools in the development image.
@@ -272,7 +300,7 @@ All generated output stays under `.img/`. Build-local FetchContent downloads
 are stored under each preset build directory's `_deps/` directory. Compile
 commands are exported for editor and static-analysis integration.
 
-## Release Builds
+### Release Builds
 
 The `release` preset is intended for production packaging:
 
@@ -287,7 +315,7 @@ The `release` preset is intended for production packaging:
 - Installs debug symbols under `${CMAKE_INSTALL_LIBDIR}/debug/${CMAKE_INSTALL_BINDIR}`
   so stripped binaries can still be diagnosed later.
 
-## Dependency Direction
+### Dependency Direction
 
 ```text
 Executable
@@ -305,3 +333,28 @@ Executable
 Domain and application targets must not depend on infrastructure or concrete
 adapters. Persistence implementations are adapters and follow the same rule.
 These rules remain visible and enforceable through target links.
+
+## Verification
+
+For CMake, target wiring, shared architecture, or cross-component behavior,
+run the full verification command unless blocked:
+
+```bash
+./tooling/scripts/test.sh
+```
+
+For focused unit-only feedback during development, use:
+
+```bash
+./tooling/scripts/test.sh tdd
+```
+
+Report the exact command, failure reason, and residual risk when verification
+cannot run.
+
+## Related Guides
+
+- `docs/architecture/cmake-target-boundaries.md`
+- `docs/architecture/dependency-rules.md`
+- `docs/development/testing-guide.md`
+- `docs/development/build-tooling-packaging.md`

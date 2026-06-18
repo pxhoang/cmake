@@ -3,7 +3,29 @@
 Every change must preserve the constitution, architecture guides, test
 placement, and repository layout.
 
-## Required Workflow
+## Ownership
+
+This guide owns the expected development workflow and definition of done.
+Review details live in `docs/development/code-review-checklist.md`; test-layer
+selection lives in `docs/development/testing-guide.md`.
+
+## Must
+
+1. Every change MUST preserve the constitution, architecture guides, test
+   placement, and repository layout.
+2. Temporary architecture violations are not allowed.
+3. Non-negotiable guide rules MUST NOT be bypassed for convenience, generated
+   suggestions, local shortcuts, or agent preference.
+4. A change is done only when the verification criteria below are satisfied.
+
+## Should
+
+1. Keep edits scoped to the requested behavior.
+2. Run the narrowest relevant verification command during development.
+3. Run the full test command for shared architecture or cross-component
+   behavior.
+
+## Workflow
 
 1. Identify affected application, feature, layer, CMake target, and repository
    area.
@@ -16,7 +38,7 @@ placement, and repository layout.
 7. For C++/Linux systems changes, document memory ownership, resource
    lifetime, thread safety, diagnostics, and platform risks.
 
-## Definition of Done
+## Verification
 
 A change is done only when:
 
@@ -27,5 +49,11 @@ A change is done only when:
 5. Verification results and residual risk are reported.
 6. Memory, resource, concurrency, security, and Linux runtime risks are handled
    or explicitly reported.
+7. Any requested exception to a non-negotiable rule has an approved amendment
+   to the owning guide or constitution.
 
-Temporary architecture violations are not allowed.
+## Related Guides
+
+- `docs/speckit/constitution.md`
+- `docs/development/code-review-checklist.md`
+- `docs/development/testing-guide.md`

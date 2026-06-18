@@ -1,8 +1,6 @@
 project_add_library(protocol
     SOURCES
         src/text_format.cpp
-    PUBLIC_DEPENDENCIES
-        project::common
 )
 
 if(BUILD_TESTING)

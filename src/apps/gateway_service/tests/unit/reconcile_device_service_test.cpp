@@ -1,4 +1,4 @@
-#include "reconcile_device_use_case.hpp"
+#include "reconcile_device_service.hpp"
 
 #include <gtest/gtest.h>
 
@@ -11,7 +11,7 @@ using gateway_service::DeviceController;
 using gateway_service::DeviceId;
 using gateway_service::DeviceState;
 using gateway_service::DeviceStateRepository;
-using gateway_service::ReconcileDeviceUseCase;
+using gateway_service::ReconcileDeviceService;
 
 class FakeRepository final : public DeviceStateRepository {
  public:
@@ -31,14 +31,14 @@ class FakeController final : public DeviceController {
   std::optional<DeviceId> applied_device_id;
 };
 
-TEST(ReconcileDeviceUseCaseTest, AppliesDesiredDeviceWhenStateDiffers) {
+TEST(ReconcileDeviceServiceTest, AppliesDesiredDeviceWhenStateDiffers) {
   auto repository = std::make_shared<FakeRepository>();
   repository->state.desired = DeviceId(20);
   repository->state.applied = DeviceId(15);
   auto controller = std::make_shared<FakeController>();
-  ReconcileDeviceUseCase useCase(repository, controller);
+  ReconcileDeviceService service(repository, controller);
 
-  EXPECT_TRUE(useCase.Execute());
+  EXPECT_TRUE(service.Execute());
 
   ASSERT_TRUE(controller->applied_device_id.has_value());
   EXPECT_EQ(controller->applied_device_id->Value(), 20);
@@ -46,14 +46,14 @@ TEST(ReconcileDeviceUseCaseTest, AppliesDesiredDeviceWhenStateDiffers) {
   EXPECT_EQ(repository->state.applied->Value(), 20);
 }
 
-TEST(ReconcileDeviceUseCaseTest, DoesNothingWhenStateAlreadyMatches) {
+TEST(ReconcileDeviceServiceTest, DoesNothingWhenStateAlreadyMatches) {
   auto repository = std::make_shared<FakeRepository>();
   repository->state.desired = DeviceId(15);
   repository->state.applied = DeviceId(15);
   auto controller = std::make_shared<FakeController>();
-  ReconcileDeviceUseCase useCase(repository, controller);
+  ReconcileDeviceService service(repository, controller);
 
-  EXPECT_FALSE(useCase.Execute());
+  EXPECT_FALSE(service.Execute());
   EXPECT_FALSE(controller->applied_device_id.has_value());
 }
 

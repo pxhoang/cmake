@@ -5,18 +5,18 @@ project_add_unit_test(gateway_service_device_domain_test
         project::gateway_device_domain
 )
 
-project_add_unit_test(gateway_service_select_device_use_case_test
+project_add_unit_test(gateway_service_select_device_service_test
     SOURCES
-        select_device_use_case_test.cpp
+        select_device_service_test.cpp
     DEPENDENCIES
-        project::gateway_device_application
+        project::gateway_device_services
 )
 
-project_add_unit_test(gateway_service_reconcile_device_use_case_test
+project_add_unit_test(gateway_service_reconcile_device_service_test
     SOURCES
-        reconcile_device_use_case_test.cpp
+        reconcile_device_service_test.cpp
     DEPENDENCIES
-        project::gateway_device_application
+        project::gateway_device_services
 )
 
 project_add_unit_test(gateway_service_device_api_test

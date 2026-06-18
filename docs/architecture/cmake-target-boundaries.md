@@ -10,7 +10,8 @@ For an app prefix named `<app_prefix>`, feature targets MUST follow this style:
 
 ```text
 <app_prefix>_<feature>_domain
-<app_prefix>_<feature>_application
+<app_prefix>_<feature>_ports
+<app_prefix>_<feature>_services
 <app_prefix>_<feature>_api
 <app_prefix>_<feature>_<adapter>_adapter
 <app_prefix>_<feature>_<persistence>_persistence

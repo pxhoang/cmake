@@ -1,22 +1,15 @@
 <!--
 Sync Impact Report
-Version change: 1.5.0 -> 1.6.0
+Version change: 1.6.1 -> 1.7.0
 Modified principles:
-- Non-Negotiable Gates: added C++ memory, resource lifetime, thread safety,
-  Linux runtime, diagnostics, performance, dependency, and review quality gate.
-- Required Checks: added C++/Linux systems quality check item.
-- Normative References: added C++/Linux systems engineering guides.
-Added sections: None
+- Governance: clarified non-negotiable force of MUST/MUST NOT rules in
+  normative guides.
+- Normative References: added the documentation index as the entry point for
+  binding docs.
+Added sections:
+- Constitutional Force
 Removed sections: None
-Templates requiring updates:
-- Pending: .specify/memory/constitution.md, replace with this constitution.
-- Pending: .specify/templates/spec-template.md, require scope, architecture,
-  repository area, security, error handling, and testability impact.
-- Pending: .specify/templates/plan-template.md, require the Constitution Check
-  gates from this document.
-- Pending: .specify/templates/tasks-template.md, require architecture,
-  repository-placement, test, documentation, ops, tooling, and verification
-  tasks before implementation is considered complete.
+Templates requiring updates: None
 Follow-up TODOs: None
 -->
 
@@ -25,7 +18,8 @@ Follow-up TODOs: None
 ## 1. Scope
 
 This constitution applies to every application, feature, library, test,
-operation asset, tool, package, and document in any project that adopts it.
+operation asset, tool, package, review, audit, and document in any project
+that adopts it.
 It governs Clean C++ service projects using feature-oriented Clean
 Architecture, CMake target boundaries, explicit testing layers, operational
 assets, engineering tooling, and separated documentation.
@@ -36,7 +30,21 @@ constitution is amended.
 Generated build, package, runtime, and downloaded output is not product source
 and MUST stay under `.img/`.
 
-## 2. Non-Negotiable Gates
+## 2. Constitutional Force
+
+Rules in this constitution and its normative references are binding:
+
+1. `MUST`, `MUST NOT`, `forbidden`, and `required` rules are non-negotiable.
+2. A specification, plan, task list, implementation, review, or generated
+   artifact that violates a non-negotiable rule is blocked.
+3. Non-negotiable rules can be changed only by explicit human approval and a
+   documented amendment to this constitution or the owning guide.
+4. `SHOULD` rules are expected defaults. Deviations require explicit rationale,
+   impact, and verification evidence.
+5. Convenience, generated suggestions, local shortcuts, and agent preferences
+   never override this constitution or the normative guides.
+
+## 3. Non-Negotiable Gates
 
 Every specification, plan, task list, and implementation MUST satisfy these
 gates:
@@ -72,7 +80,7 @@ gates:
 Any failed gate blocks implementation until the design is revised or this
 constitution is amended.
 
-## 3. Required Checks
+## 4. Required Checks
 
 Every specification MUST state:
 
@@ -114,10 +122,14 @@ Task lists MUST order work so enforcement comes before implementation:
 4. Documentation, ops, tooling, CI, and security updates.
 5. Verification tasks.
 
-## 4. Normative References
+## 5. Normative References
 
 The following guides are binding. Implementations MUST comply with this
 constitution and these documents:
+
+Documentation:
+
+1. `docs/README.md`
 
 Architecture:
 
@@ -159,7 +171,7 @@ Operations:
 If a guide conflicts with this constitution, this constitution wins. If two
 guides conflict, stop and request clarification or an amendment.
 
-## 5. Governance
+## 6. Governance
 
 This constitution overrides informal conventions, generated plans, and agent
 preferences. Agents MUST treat it as higher priority than local convenience,
@@ -175,4 +187,4 @@ version bump.
 Every plan and implementation review MUST check compliance with this
 constitution. Non-compliant work MUST be revised before it is considered done.
 
-**Version**: 1.6.0 | **Ratified**: 2026-06-17 | **Last Amended**: 2026-06-18
+**Version**: 1.7.0 | **Ratified**: 2026-06-17 | **Last Amended**: 2026-06-18

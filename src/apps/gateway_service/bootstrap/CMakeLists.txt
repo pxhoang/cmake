@@ -7,6 +7,7 @@ project_add_library(gateway_composition
         project::gateway_device_api
         project::gateway_config
     PRIVATE_DEPENDENCIES
+        project::gateway_device_services
         project::gateway_device_file_persistence
         project::gateway_device_console_adapter
 )

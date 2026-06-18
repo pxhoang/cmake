@@ -37,9 +37,10 @@ TEST_F(BootstrapTest, WiresAdaptersAndInitializesDefaultDeviceId) {
   const auto config = gateway_service::AppConfig::Load();
   gateway_service::Bootstrap bootstrap;
 
-  auto api = bootstrap.CreateDeviceApi(config);
+  auto composition = bootstrap.Create(config);
+  composition.Initialize(config);
 
-  EXPECT_EQ(api.GetSelectedDevice(), 20);
+  EXPECT_EQ(composition.Device().GetSelectedDevice(), 20);
   EXPECT_TRUE(std::filesystem::exists(path));
 }
 

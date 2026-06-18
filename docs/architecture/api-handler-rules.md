@@ -1,14 +1,14 @@
 # API / IPC / Handler Rules
 
 The default application API is an in-process C++ function-call API. API code is
-an input adapter. It translates caller input into application use case calls
-and translates use case output into caller-facing responses.
+an input adapter. It translates caller input into application service calls
+and translates service output into caller-facing responses.
 
 API, IPC, and handler code MUST:
 
-1. Depend on application use cases, not concrete adapters.
+1. Depend on application services, not concrete adapters.
 2. Keep protocol parsing and formatting outside domain and application logic.
-3. Validate caller input at the boundary before invoking use cases.
+3. Validate caller input at the boundary before invoking services.
 4. Avoid owning business rules, persistence rules, retry policies, or mechanism
    details.
 5. Return explicit success or failure information.

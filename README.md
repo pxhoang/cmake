@@ -108,6 +108,8 @@ The `device` feature is the sample for future features:
 features/device/
 ├── domain/
 ├── application/
+│   ├── ports/
+│   └── services/
 ├── api/
 └── adapters/
     ├── console/
@@ -117,18 +119,22 @@ features/device/
 ```text
 gateway_service
 └── gateway_composition
+    ├── gateway_config
     ├── gateway_device_api
-    │   └── gateway_device_application
-    │       └── gateway_device_domain
+    │   └── gateway_device_services
+    │       └── gateway_device_ports
+    │           └── gateway_device_domain
     ├── gateway_device_file_persistence
-    │   └── gateway_device_application
+    │   └── gateway_device_ports
+    │       └── gateway_device_domain
     └── gateway_device_console_adapter
-        └── gateway_device_application
+        └── gateway_device_ports
+            └── gateway_device_domain
 ```
 
-Persistence is implemented as an adapter. The application layer owns the
-repository port; `adapters/persistence/file` provides the file-backed
-implementation.
+Persistence is implemented as an adapter. `application/ports` owns the
+repository port; `application/services` owns workflow policy, and
+`adapters/persistence/file` provides the file-backed implementation.
 
 Gateway-service C++ types now share one application namespace:
 `gateway_service`. Folder boundaries still express architectural layers, but

@@ -4,6 +4,6 @@ project_add_library(gateway_device_api
     PUBLIC_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC_DEPENDENCIES
-        project::gateway_device_application
+        project::gateway_device_services
         project::protocol
 )

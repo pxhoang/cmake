@@ -6,20 +6,15 @@
 
 namespace gateway_service {
 
-DeviceApi::DeviceApi(
-    std::shared_ptr<SelectDeviceUseCase> select_device_use_case,
-    std::shared_ptr<GetSelectedDeviceUseCase> get_selected_device_use_case,
-    std::shared_ptr<ReconcileDeviceUseCase> reconcile_device_use_case)
-    : select_device_use_case_(std::move(select_device_use_case)),
-      get_selected_device_use_case_(std::move(get_selected_device_use_case)),
-      reconcile_device_use_case_(std::move(reconcile_device_use_case)) {}
+DeviceApi::DeviceApi(std::shared_ptr<DeviceService> device_service)
+    : device_service_(std::move(device_service)) {}
 
 void DeviceApi::SelectDevice(int device_id) {
-  select_device_use_case_->Execute(device_id);
+  device_service_->SelectDevice(device_id);
 }
 
 int DeviceApi::GetSelectedDevice() {
-  return get_selected_device_use_case_->Execute().Value();
+  return device_service_->GetSelectedDevice().Value();
 }
 
 std::string DeviceApi::GetSelectedDeviceMessage() {
@@ -27,7 +22,7 @@ std::string DeviceApi::GetSelectedDeviceMessage() {
 }
 
 bool DeviceApi::ReconcileDevice() {
-  return reconcile_device_use_case_->Execute();
+  return device_service_->ReconcileDevice();
 }
 
 }  // namespace gateway_service

@@ -8,24 +8,24 @@
 
 namespace gateway_service {
 
-class ReconcileDeviceUseCase {
+class SelectDeviceService {
  public:
-  ReconcileDeviceUseCase(std::shared_ptr<DeviceStateRepository> repository,
-                         std::shared_ptr<DeviceController> controller)
+  SelectDeviceService(std::shared_ptr<DeviceStateRepository> repository,
+                      std::shared_ptr<DeviceController> controller)
       : repository_(std::move(repository)),
         controller_(std::move(controller)) {}
 
-  bool Execute() {
+  void Execute(int raw_device_id) {
+    const DeviceId device_id(raw_device_id);
     auto state = repository_->Load();
 
-    if (!state.desired.has_value() || state.desired == state.applied) {
-      return false;
-    }
-
-    controller_->ApplyDevice(state.desired.value());
-    state.applied = state.desired;
+    state.desired = device_id;
     repository_->Save(state);
-    return true;
+
+    controller_->ApplyDevice(device_id);
+
+    state.applied = device_id;
+    repository_->Save(state);
   }
 
  private:

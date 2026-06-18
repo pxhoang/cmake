@@ -8,9 +8,9 @@
 
 namespace gateway_service {
 
-class GetSelectedDeviceUseCase {
+class GetSelectedDeviceService {
  public:
-  explicit GetSelectedDeviceUseCase(
+  explicit GetSelectedDeviceService(
       std::shared_ptr<DeviceStateRepository> repository)
       : repository_(std::move(repository)) {}
 

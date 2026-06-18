@@ -1,5 +1,9 @@
 # Deployment
 
+This guide owns deployed package contents, service-manager behavior, runtime
+directories, permissions, and operational rollback. Build tooling and package
+creation commands are owned by `docs/development/build-tooling-packaging.md`.
+
 Deployment assets belong under `ops/deploy/`. Runtime configuration examples
 and defaults belong under `ops/config/`.
 

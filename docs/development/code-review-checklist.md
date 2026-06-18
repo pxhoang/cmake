@@ -3,7 +3,24 @@
 Reviewers and agents MUST check the constitution gates and the relevant
 normative guides.
 
-## Checklist
+## Ownership
+
+This guide owns the development review checklist and completion gate for code,
+docs, tooling, and operations changes. The constitution owns the binding gates;
+topic-specific guides own the detailed rules.
+
+## Must
+
+Any failed checklist item MUST be resolved before the change is considered
+done. Failed non-negotiable rules cannot be waived by review comment; they
+require an explicit amendment to the owning guide or constitution.
+
+## Should
+
+Reviewers SHOULD cite the specific guide, file, target, test, or command that
+supports each material review decision.
+
+## Workflow
 
 1. Scope: Does the change stay within approved product scope?
 2. Architecture: Are feature layers and bootstrap composition preserved?
@@ -21,5 +38,13 @@ normative guides.
 14. Docs/ops: Are behavior and operational changes documented?
 15. Verification: Were relevant commands run or residual risk reported?
 
-Any failed checklist item must be resolved or explicitly escalated before the
-change is considered done.
+## Verification
+
+The final change summary MUST include relevant verification commands or the
+reason verification could not run.
+
+## Related Guides
+
+- `docs/speckit/constitution.md`
+- `docs/development/contributing.md`
+- `docs/development/testing-guide.md`
